@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Londrina+Sketch&family=Outfit:wght@100..900&family=Prata&display=swap');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+a.active hr{
+    display: block;
+}
+
+*{
+    font-family: Outfit;
+}
+
+.prata-regular {
+  font-family: "Prata", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+@keyframes wave {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(10deg); }
+  50% { transform: rotate(-10deg); }
+  75% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}
