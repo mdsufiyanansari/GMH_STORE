@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from "react";
 import { IoIosArrowDropdown } from "react-icons/io";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
-import ProductItem from "../components/Productitem";
+import ProductItem from "../components/ProductItem";
 
 const Collection = () => {
   const { products, search } = useContext(ShopContext);
