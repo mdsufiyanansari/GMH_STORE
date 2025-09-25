@@ -12,7 +12,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
 import ScrollToTop from "./components/ScrollToTop";
-import Profile from "./pages/profile";
+import Profile from "./pages/Profile";
+
 
 
 
