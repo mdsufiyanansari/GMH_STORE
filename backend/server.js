@@ -5,6 +5,8 @@ dotenv.config();
 console.log("Cloudinary URL:", process.env.CLOUDINARY_URL);
 
 import express from "express";
+import corsMiddleware from "./middleware/corsMiddleware.js";
+
 import cors from "cors";
 import connectDB from "./config/mongodb.js";
 import connectCloudinary from "./config/cloudinary.js";
@@ -25,8 +27,11 @@ connectDB();
 connectCloudinary();
 
 // middleware
+// app.use(express.json());
+// app.use(cors());
+
 app.use(express.json());
-app.use(cors());
+app.use(corsMiddleware); 
 
 // api endpoints
 app.use("/api/user", userRouter);
