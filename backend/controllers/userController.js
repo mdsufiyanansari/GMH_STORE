@@ -39,6 +39,11 @@ const registerUser = async (req, res) => {
     //trim space password 1st and last
        password = password.trim();
 
+        // space inside password
+    if (password.includes(" ")) {
+      return res.json({ success: false, message: "Invalid credentials" });
+    }
+
     //checking user exists or not
     const exists = await userModel.findOne({ email });
     if (exists) {
