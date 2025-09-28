@@ -7,67 +7,31 @@ const RelatedProducts = ({ category, subCategory }) => {
   const { products } = useContext(ShopContext);
   const [related, setRelated] = useState([]);
   const [visibleProducts, setVisibleProducts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // loading state
 
   // Filter related products
   useEffect(() => {
     if (products.length > 0) {
-      let productsCopy = products.filter(
+      setLoading(true); // loading start
+      const productsCopy = products.filter(
         (item) =>
           item.category === category && item.subCategory === subCategory
       );
 
       setRelated(productsCopy);
-      setVisibleProducts(productsCopy.slice(0, 8)); // starting me 8 dikhao
-      setPage(1);
+      setVisibleProducts(productsCopy.slice(0, 8)); // sirf starting 8 dikhao
+      setLoading(false); // loading finish
     }
   }, [products, category, subCategory]);
 
-  // Infinite Scroll listener
-  useEffect(() => {
-    const handleScroll = () => {
-      if (
-        window.innerHeight + window.scrollY >=
-        document.documentElement.scrollHeight - 100
-      ) {
-        loadMore();
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [related, visibleProducts, page]);
-
-  const loadMore = () => {
-    if (loading || related.length === 0) return;
-    setLoading(true);
-
-    setTimeout(() => {
-      let nextPage = page + 1;
-      let newProducts = related.slice(0, nextPage * 8);
-
-      // agar products khatam ho gaye to repeat karke infinite banado
-      if (newProducts.length < nextPage * 8) {
-        newProducts = [
-          ...visibleProducts,
-          ...related,
-        ];
-      }
-
-      setVisibleProducts(newProducts);
-      setPage(nextPage);
-      setLoading(false);
-    }, 1000); 
-  };
-
-  if (visibleProducts.length === 0) return null;
+  if (visibleProducts.length === 0 && !loading) return null;
 
   return (
     <div className="mt-12">
       <h1 className="text-3xl text-center p-4">
-      <Title text1={'RELATED'} text2={'PRODUCTS'}/>
-     </h1>
+        <Title text1={'RELATED'} text2={'PRODUCTS'} />
+      </h1>
+
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
         {visibleProducts.map((item, index) => (
           <Link
@@ -94,13 +58,12 @@ const RelatedProducts = ({ category, subCategory }) => {
       {/* Loading spinner */}
       {loading && (
         <div className="flex justify-center items-center mt-6">
-         <img
-  src="https://cdn.pixabay.com/animation/2023/08/15/07/22/07-22-02-443_512.gif"
-  alt="loading"
-  className="w-40 h-24"
-  style={{ animation: "wave 1s infinite ease-in-out" }}
-/>
-
+          <img
+            src="https://cdn.pixabay.com/animation/2023/08/15/07/22/07-22-02-443_512.gif"
+            alt="loading"
+            className="w-40 h-24"
+            style={{ animation: "wave 1s infinite ease-in-out" }}
+          />
         </div>
       )}
     </div>

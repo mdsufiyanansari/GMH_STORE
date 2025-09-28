@@ -3,72 +3,72 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
 
-const createToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET);
+// Create JWT token
+const createToken = (id, role = "user") => {
+  return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "1d" });
 };
 
-// route for login
+// ===================== LOGIN USER =====================
 const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await userModel.findOne({ email });
+    let { email, password } = req.body;
+    email = email.trim().toLowerCase(); // normalize email
 
+    const user = await userModel.findOne({ email });
     if (!user) {
-      return res.json({ success: false, message: "User don't Exists" });
+      return res.status(401).json({ success: false, message: "User doesn't exist" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
-
-    if (isMatch) {
-      const token = createToken(user._id);
-      res.json({ success: true, token });
-    } else {
-      res.json({ success: false, message: "invalid credentials" });
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
     }
+
+    const token = createToken(user._id);
+    res.json({ success: true, token });
+
   } catch (error) {
     console.log(error);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// route for register
+// ===================== REGISTER USER =====================
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    let { name, email, password } = req.body;
 
-    //trim space password 1st and last
-       password = password.trim();
-
-        // space inside password
-    if (password.includes(" ")) {
-      return res.json({ success: false, message: "Invalid credentials" });
+    if (!name || !email || !password) {
+      return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
-    //checking user exists or not
+    email = email.trim().toLowerCase(); // normalize email
+    let newPassword = password.trim();
+
+    // password validations
+    if (newPassword.includes(" ")) {
+      return res.status(400).json({ success: false, message: "Password cannot contain spaces" });
+    }
+
+    if (newPassword.length < 8) {
+      return res.status(400).json({ success: false, message: "Please enter a strong password (8+ chars)" });
+    }
+
+    if (!validator.isEmail(email)) {
+      return res.status(400).json({ success: false, message: "Please enter a valid email" });
+    }
+
+    // check if user exists
     const exists = await userModel.findOne({ email });
     if (exists) {
-      return res.json({ success: false, message: "User Already Exists" });
+      return res.status(400).json({ success: false, message: "User Already Exists" });
     }
 
-    //valaditing email format and strong password
-    if (!validator.isEmail(email)) {
-      return res.json({
-        success: false,
-        message: "please enter a valid email",
-      });
-    }
-
-    if (password.length < 8) {
-      return res.json({
-        success: false,
-        message: "please enter a strong password",
-      });
-    }
-
-    //hashing user password
+    // hash password
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
 
+    // create user
     const newUser = new userModel({
       name,
       email,
@@ -78,31 +78,41 @@ const registerUser = async (req, res) => {
     const user = await newUser.save();
 
     const token = createToken(user._id);
-
     res.json({ success: true, token });
+
   } catch (error) {
     console.log(error);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// route for admin login
+// ===================== ADMIN LOGIN =====================
 const adminLogin = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+    email = email.trim();
+    password = password.trim();
+
     if (
       email === process.env.ADMIN_EMAIL &&
       password === process.env.ADMIN_PASSWORD
     ) {
-      const token = jwt.sign(email + password, process.env.JWT_SECRET);
-      res.json({ success: true, token });
-    } else {
-      res.json({ success: false, message: "invalide credintial" });
+      const token = createToken("admin-id", "admin");
+      return res.json({ success: true, token });
     }
+
+    return res.status(401).json({ success: false, message: "Invalid credentials" });
+
   } catch (error) {
     console.log(error);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
-export { loginUser, registerUser, adminLogin };
+// ===================== VERIFY TOKEN =====================
+const verifyToken = async (req, res) => {
+  // just return success if authUser middleware passes
+  res.json({ success: true, message: "Token is valid", userId: req.userId });
+};
+
+export { loginUser, registerUser, adminLogin, verifyToken };

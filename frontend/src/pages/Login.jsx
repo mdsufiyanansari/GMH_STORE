@@ -82,7 +82,9 @@ const [email,setEmail]= useState("")
         />
         <input 
         onChange={(e)=>setPassword(e.target.value)} value={password}
-          onKeyDown={(e) => {if (e.key === " ") { e.preventDefault(); } }}
+          onKeyDown={(e) => {if (e.key === " ") { e.preventDefault(); 
+    }
+  }}
           type="password" 
           placeholder="Password"
           className="w-full border-b border-black bg-transparent py-3 px-2 text-black placeholder-black focus:outline-none focus:border-black"
