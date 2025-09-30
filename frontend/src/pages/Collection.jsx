@@ -12,44 +12,11 @@ const Collection = () => {
   const [subCategories, setSubCategories] = useState([]);
   const [sortType, setSortType] = useState("relavent");
   const [showFilter, setShowFilter] = useState(false);
+  const [loading, setLoading] = useState(true); // ✅ Loading Added
 
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const searchQuery = query.get("search") || ""; // URL se search param
-
-  // Filter logic
-  const applyFilter = () => {
-    let filtered = products.slice();
-
-    // Search filter
-    if (searchQuery) {
-      filtered = filtered.filter((item) =>
-        item.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-    }
-
-    // Category filter
-    if (category.length > 0) {
-      filtered = filtered.filter((item) => category.includes(item.category));
-    }
-
-    // Subcategory filter
-    if (subCategories.length > 0) {
-      filtered = filtered.filter((item) =>
-        subCategories.includes(item.subCategory)
-      );
-    }
-
-    setFilteredProducts(filtered);
-  };
-
-  // Sorting
-  const sortProducts = () => {
-    let copy = filteredProducts.slice();
-    if (sortType === "low-high") copy.sort((a, b) => a.price - b.price);
-    else if (sortType === "high-low") copy.sort((a, b) => b.price - a.price);
-    setFilteredProducts(copy);
-  };
 
   // Toggle Category/Subcategory
   const toggleCategory = (value) => {
@@ -64,13 +31,59 @@ const Collection = () => {
     else setSubCategories((prev) => [...prev, value]);
   };
 
+  // Show loading on route change
   useEffect(() => {
-    applyFilter();
-  }, [products, category, subCategories, searchQuery]);
+    setLoading(true); // ✅ start loading when route/search changes
+  }, [location.pathname, location.search]);
 
+  // Combined filter + sort useEffect
   useEffect(() => {
-    sortProducts();
-  }, [sortType]);
+    if (products.length > 0) {
+      let filtered = products.slice();
+
+      // Search filter
+      if (searchQuery) {
+        filtered = filtered.filter((item) =>
+          item.name.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      }
+
+      // Category filter
+      if (category.length > 0) {
+        filtered = filtered.filter((item) => category.includes(item.category));
+      }
+
+      // Subcategory filter
+      if (subCategories.length > 0) {
+        filtered = filtered.filter((item) =>
+          subCategories.includes(item.subCategory)
+        );
+      }
+
+      // Sorting
+      if (sortType === "low-high") filtered.sort((a, b) => a.price - b.price);
+      else if (sortType === "high-low") filtered.sort((a, b) => b.price - a.price);
+
+      setFilteredProducts(filtered);
+
+      // ✅ Small timeout to simulate loading for UX
+      const timer = setTimeout(() => setLoading(false), 600);
+      return () => clearTimeout(timer);
+    }
+  }, [products, category, subCategories, searchQuery, sortType]);
+
+  // Loading screen
+  if (loading) {
+    return (
+      <div className="flex justify-center bg-black items-center h-[60vh]">
+         <img
+          src="https://engineermart.in/web/site/assets/img/loader/loading.gif"
+          alt="loading"
+          className="w-40 h-40"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col sm:flex-row gap-8 px-6 md:px-12 lg:px-20 my-10">

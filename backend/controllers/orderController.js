@@ -14,7 +14,8 @@ const getRazorpayInstance = () => {
 // ---------------- COD Order ----------------
 const placeOrder = async (req, res) => {
   try {
-    const { userId, items, amount, address } = req.body;
+    const userId = req.user.id; // ✅ from token
+    const { items, amount, address } = req.body;
 
     const orderData = {
       userId,
@@ -41,7 +42,8 @@ const placeOrder = async (req, res) => {
 // ---------------- Razorpay Order ----------------
 const placeOrderRazorpay = async (req, res) => {
   try {
-    const { userId, items, amount, address } = req.body;
+    const userId = req.user.id; // ✅ from token
+    const { items, amount, address } = req.body;
 
     const orderData = {
       userId,
@@ -75,7 +77,8 @@ const placeOrderRazorpay = async (req, res) => {
 // ---------------- Payment Verify ----------------
 const verifyPayment = async (req, res) => {
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderId, userId } = req.body;
+    const userId = req.user.id; // ✅ from token
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderId } = req.body;
 
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSign = crypto
@@ -110,7 +113,7 @@ const allOrders = async (req, res) => {
 
 const userOrders = async (req, res) => {
   try {
-    const { userId } = req.body;
+    const userId = req.user.id; // ✅ from token
     const orders = await orderModel.find({ userId });
     res.json({ success: true, orders });
   } catch (error) {
@@ -130,4 +133,11 @@ const updateStatus = async (req, res) => {
   }
 };
 
-export { placeOrder, placeOrderRazorpay, verifyPayment, allOrders, userOrders, updateStatus };
+export {
+  placeOrder,
+  placeOrderRazorpay,
+  verifyPayment,
+  allOrders,
+  userOrders,
+  updateStatus,
+};

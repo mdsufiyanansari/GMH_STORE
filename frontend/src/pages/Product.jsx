@@ -38,11 +38,11 @@ const Product = () => {
   // ✅ Loading GIF overlay
   if (loading || !productData) {
     return (
-      <div className="fixed inset-0 bg-white  flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-black  flex items-center justify-center z-50">
         <img
-          src="https://cdn.pixabay.com/animation/2023/08/15/07/22/07-22-02-443_512.gif"
+          src="https://engineermart.in/web/site/assets/img/loader/loading.gif"
           alt="loading"
-          className="w-40 h-24"
+          className="w-40 h-40"
         />
       </div>
     );

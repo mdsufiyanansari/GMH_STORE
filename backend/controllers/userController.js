@@ -51,7 +51,7 @@ const registerUser = async (req, res) => {
     }
 
     if (newPassword.length < 8) {
-      return res.status(400).json({ success: false, message: "Please enter a strong password (8+ chars)" });
+      return res.status(400).json({ success: false, message: "Keep your password to a minimum of 6 characters" });
     }
 
     if (!validator.isEmail(email)) {

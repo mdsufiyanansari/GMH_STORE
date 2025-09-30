@@ -13,36 +13,58 @@ import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
 import ScrollToTop from "./components/ScrollToTop";
 import Profile from "./pages/Profile";
+import PrivateRoute from "./components/PrivateRoute";
 
-
-
-
-  import { ToastContainer, toast } from 'react-toastify';
-
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   return (
-    <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] ">
+    <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]">
       <ToastContainer />
-      <Navbar/>
-      <SearchBar/>
-      <ScrollToTop/>
-      {/* Routes */}
+      <Navbar />
+      <SearchBar />
+      <ScrollToTop />
+
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/cart" element={<Cart />} />
         <Route path="/collection" element={<Collection />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/orders" element={<Orders />} />
-        <Route path="/place-order" element={<PlaceOrder />} />
         <Route path="/product/:productId" element={<Product />} />
-         <Route path="/profile" element={<Profile />} />
-        
+        <Route path="/cart" element={<Cart />} />
+
+        {/* Login Page */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/place-order"
+          element={
+            <PrivateRoute>
+              <PlaceOrder />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <PrivateRoute>
+              <Orders />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          }
+        />
       </Routes>
 
-      <Footer/>
+      <Footer />
     </div>
   );
 };

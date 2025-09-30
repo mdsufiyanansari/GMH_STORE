@@ -1,14 +1,15 @@
-import React, { useContext, useState } from 'react'
-import Title from '../components/Title'
-import CartTotal from '../components/CartTotal'
-import { assets } from '../assets/assets'
-import { ShopContext } from '../context/ShopContext'
-import axios from 'axios'
-import { toast } from 'react-toastify'
+import React, { useContext, useEffect, useState } from 'react';
+import Title from '../components/Title';
+import CartTotal from '../components/CartTotal';
+import { assets } from '../assets/assets';
+import { ShopContext } from '../context/ShopContext';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const PlaceOrder = () => {
+  const { navigate, backendUrl, token, cartItems, setCartItems, getCartAmount, delivery_fee, products } = useContext(ShopContext);
+
   const [method, setMethod] = useState('cod');
-  const { navigate, backendUrl, token, cartItems, setCartItems, getCartAmount, delivery_fee, products } = useContext(ShopContext)
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -21,15 +22,22 @@ const PlaceOrder = () => {
     pincode: "",
     country: "",
     phone: "",
-  })
+  });
 
-  const [isPinValid, setIsPinValid] = useState(true)
+  const [isPinValid, setIsPinValid] = useState(true);
 
-  // ------------------- OTP STATES -------------------
+  // OTP States
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpVerified, setOtpVerified] = useState(false);
-  // ---------------------------------------------------
+
+  // ------------------ LOGIN CHECK ------------------
+  useEffect(() => {
+    if (!token) {
+      navigate('/login'); // agar user login nahi hai, login page pe redirect
+    }
+  }, [token]);
+  // -------------------------------------------------
 
   const onChangeHandler = (event) => {
     const name = event.target.name;
@@ -40,7 +48,7 @@ const PlaceOrder = () => {
     if (name === "pincode" && value.length === 6) {
       fetchStateDistrict(value);
     }
-  }
+  };
 
   const fetchStateDistrict = async (pin) => {
     try {
@@ -65,7 +73,7 @@ const PlaceOrder = () => {
       console.error(err);
       setIsPinValid(false)
     }
-  }
+  };
 
   // ------------------- SEND OTP -------------------
   const sendOtp = async () => {
@@ -82,10 +90,10 @@ const PlaceOrder = () => {
       console.error(err);
       toast.error("Error sending OTP");
     }
-  }
+  };
   // ------------------------------------------------
 
-  // ------------------- VERIFY OTP -------------------
+  // ------------------- VERIFY OTP ----------------
   const verifyOtp = async () => {
     if (!otp) return toast.error("Enter OTP!");
     try {
@@ -100,7 +108,7 @@ const PlaceOrder = () => {
       console.error(err);
       toast.error("Error verifying OTP");
     }
-  }
+  };
   // --------------------------------------------------
 
   const onSubmitHandler = async (event) => {
@@ -111,12 +119,10 @@ const PlaceOrder = () => {
       return;
     }
 
-    // ------------------- OTP CHECK -------------------
     if (!otpVerified) {
       toast.error("Please verify your phone number first!");
       return;
     }
-    // --------------------------------------------------
 
     try {
       let orderItems = [];
@@ -140,7 +146,7 @@ const PlaceOrder = () => {
         address: formData,
         items: orderItems,
         amount: getCartAmount() + delivery_fee,
-      }
+      };
 
       switch (method) {
         case "cod":
@@ -202,18 +208,17 @@ const PlaceOrder = () => {
       console.error(error);
       toast.error(error.message)
     }
-  }
+  };
 
   return (
     <form onSubmit={onSubmitHandler} className="flex flex-col md:flex-row gap-10 p-6">
 
-      {/* ------------------left side-------------------- */}
+      {/* Left Side */}
       <div className="flex-1 bg-white shadow-lg rounded-2xl p-6">
         <div className="text-2xl mb-6 font-semibold">
           <Title text1={'DELIVERY'} text2={'INFORMATION'} />
         </div>
 
-        {/* Name */}
         <div className="flex gap-4 mb-4">
           <input onChange={onChangeHandler} name="firstName" value={formData.firstName} required type="text" placeholder="First name"
             className="w-1/2 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
@@ -227,15 +232,13 @@ const PlaceOrder = () => {
         <input onChange={onChangeHandler} name="street" value={formData.street} required type="text" placeholder="Street"
           className="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
 
-        {/* City & State */}
         <div className="flex gap-4 mb-4">
-          <input onChange={onChangeHandler} name="city" value={formData.district} required type="text" placeholder="District"
+          <input name="city" value={formData.district} required type="text" placeholder="District"
             readOnly className={`w-1/2 border ${isPinValid ? 'border-gray-300' : 'border-red-500'} rounded-lg px-4 py-2`} />
-          <input onChange={onChangeHandler} name="state" value={formData.state} required type="text" placeholder="State"
+          <input name="state" value={formData.state} required type="text" placeholder="State"
             readOnly className={`w-1/2 border ${isPinValid ? 'border-gray-300' : 'border-red-500'} rounded-lg px-4 py-2`} />
         </div>
 
-        {/* Pincode & Country */}
         <div className="flex gap-4 mb-4">
           <input onChange={onChangeHandler} name="pincode" value={formData.pincode} required type="number" placeholder="Pincode"
             className={`w-1/2 border ${isPinValid ? 'border-gray-300' : 'border-red-500'} rounded-lg px-4 py-2`} />
@@ -243,7 +246,7 @@ const PlaceOrder = () => {
             className="w-1/2 border border-gray-300 rounded-lg px-4 py-2" />
         </div>
 
-        {/* ---------------- OTP Input ---------------- */}
+        {/* OTP */}
         <div className="flex gap-4 mb-4 items-center">
           <input
             onChange={onChangeHandler}
@@ -274,11 +277,10 @@ const PlaceOrder = () => {
         )}
 
         {otpVerified && <p className="text-green-600 mb-4">Phone verified ✅</p>}
-        {/* ----------------------------------------- */}
 
       </div>
 
-      {/* ------------------right side------------------- */}
+      {/* Right Side */}
       <div className="flex-1 bg-gray-50 shadow-inner rounded-2xl p-6">
         <CartTotal />
         <div className="mt-10">
@@ -307,4 +309,4 @@ const PlaceOrder = () => {
   )
 }
 
-export default PlaceOrder
+export default PlaceOrder;
