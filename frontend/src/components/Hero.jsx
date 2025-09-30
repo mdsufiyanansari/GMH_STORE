@@ -7,7 +7,7 @@ import "swiper/css/pagination";
 
 const Hero = () => {
   const [ads, setAds] = useState([]);
-  const API_URL = import.meta.env.VITE_BACKEND_URL; // ✅ env se backend URL
+  const API_URL = import.meta.env.VITE_BACKEND_URL  || "http://localhost:4000"; // ✅ env se backend URL
 
   useEffect(() => {
     const fetchAds = async () => {
