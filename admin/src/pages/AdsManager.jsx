@@ -3,7 +3,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const API = import.meta.env.VITE_BACKEND_URL  || "http://localhost:4000"; // ✅ env se API URL lo
+const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";// ✅ env se API URL lo
 
 const AdsManager = () => {
   const [ads, setAds] = useState([]);
