@@ -48,7 +48,7 @@ app.use("/ads", adsRoutes);
 app.use("/api", otpRoutes);
 
 app.get("/", (req, res) => {
-  res.send("API WORKING");
+  res.send("API WORKING 🚀");
 });
 
 // start server
