@@ -4,7 +4,7 @@ const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:5174",
   "https://gmh-store.vercel.app",
-   "https://gmh-store-admin.vercel.app/"
+   "https://gmh-store-admin.vercel.app"
 ];
 
 const corsOptions = {
