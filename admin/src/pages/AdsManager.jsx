@@ -3,6 +3,8 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const API = import.meta.env.VITE_BACKEND_URL; // ✅ env se API URL lo
+
 const AdsManager = () => {
   const [ads, setAds] = useState([]);
   const [file, setFile] = useState(null);
@@ -10,7 +12,7 @@ const AdsManager = () => {
 
   const getAds = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/ads");
+      const res = await axios.get(`${API}/ads`);
       setAds(res.data);
     } catch (err) {
       toast.error("Failed to fetch ads!");
@@ -29,11 +31,11 @@ const AdsManager = () => {
     formData.append("link", link);
 
     try {
-      await axios.post("http://localhost:4000/ads", formData, {
+      await axios.post(`${API}/ads`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success("Ad uploaded successfully!");
-      setFile(null); 
+      setFile(null);
       setLink("");
       getAds();
     } catch (err) {
@@ -44,7 +46,7 @@ const AdsManager = () => {
 
   const deleteAd = async (id) => {
     try {
-      await axios.delete(`http://localhost:4000/ads/${id}`);
+      await axios.delete(`${API}/ads/${id}`);
       toast.success("Ad deleted successfully!");
       getAds();
     } catch (err) {
