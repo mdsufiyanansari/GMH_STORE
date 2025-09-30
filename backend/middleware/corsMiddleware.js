@@ -1,8 +1,20 @@
 import cors from "cors";
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "https://gmh-store.vercel.app",
+];
+
 const corsOptions = {
-  origin: "https://gmh-store.vercel.app/", // ✅ frontend URL
-  credentials: true, // agar cookies/token bhejna ho
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
 };
 
 export default cors(corsOptions);

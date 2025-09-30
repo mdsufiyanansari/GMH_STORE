@@ -6,6 +6,8 @@ import BestSeller from '../components/BestSeller';
 import OurPolicy from '../components/OurPolicy';
 import NewsletterBox from '../components/NewsletterBox';
 
+
+
 const Home = () => {
   const navigate = useNavigate();
 
@@ -22,7 +24,7 @@ const Home = () => {
       >
         Explore Our Full Collection
       </div>
-
+   
       <Hero />
       <LatestCollection />
       <BestSeller />
