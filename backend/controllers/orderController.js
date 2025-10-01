@@ -14,7 +14,7 @@ const getRazorpayInstance = () => {
 // ---------------- COD Order ----------------
 const placeOrder = async (req, res) => {
   try {
-    const userId = req.user.id; // ✅ from token
+    const userId = req.user.id;
     const { items, amount, address } = req.body;
 
     const orderData = {
@@ -42,7 +42,7 @@ const placeOrder = async (req, res) => {
 // ---------------- Razorpay Order ----------------
 const placeOrderRazorpay = async (req, res) => {
   try {
-    const userId = req.user.id; // ✅ from token
+    const userId = req.user.id;
     const { items, amount, address } = req.body;
 
     const orderData = {
@@ -59,7 +59,7 @@ const placeOrderRazorpay = async (req, res) => {
     await newOrder.save();
 
     const options = {
-      amount: amount * 100, // paise me
+      amount: amount * 100,
       currency: "INR",
       receipt: newOrder._id.toString(),
     };
@@ -77,7 +77,7 @@ const placeOrderRazorpay = async (req, res) => {
 // ---------------- Payment Verify ----------------
 const verifyPayment = async (req, res) => {
   try {
-    const userId = req.user.id; // ✅ from token
+    const userId = req.user.id;
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature, orderId } = req.body;
 
     const sign = razorpay_order_id + "|" + razorpay_payment_id;
@@ -113,7 +113,7 @@ const allOrders = async (req, res) => {
 
 const userOrders = async (req, res) => {
   try {
-    const userId = req.user.id; // ✅ from token
+    const userId = req.user.id;
     const orders = await orderModel.find({ userId });
     res.json({ success: true, orders });
   } catch (error) {

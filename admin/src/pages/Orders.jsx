@@ -1,113 +1,83 @@
-import React, { useEffect, useState } from 'react'
-import axios from "axios"
-import { backendUrl, currency } from "../App"
-import { toast } from "react-toastify"
-import { assets } from '../assets/assets'
+import React, { useEffect, useState } from 'react';
+import axios from "axios";
+import { backendUrl, currency } from "../App";
+import { toast } from "react-toastify";
+import { assets } from '../assets/assets';
 
+const Orders = () => {
+  const [orders, setOrders] = useState([]);
 
-const Orders = ({ token }) => {
-  const [orders, setOrders] = useState([])
-
+  // Admin orders fetch
   const fetchAllOrders = async () => {
-    if (!token) return;
     try {
-      const response = await axios.post(
-        backendUrl + "/api/order/list",
-        {},
-        { headers: { token } }
-      )
-      if (response.data.success) {
-        setOrders(response.data.orders.reverse());
-      } else {
-        toast.error(response.data.message)
-      }
+      const response = await axios.post(`${backendUrl}/api/order/list`);
+      if (response.data.success) setOrders(response.data.orders.reverse());
+      else toast.error(response.data.message);
     } catch (error) {
-      toast.error(error.message)
+      toast.error(error.message);
     }
-  }
+  };
 
+  // Update order status
   const statusHandler = async (event, orderId) => {
     try {
-
-      const response = await axios.post(backendUrl + "/api/order/status", {orderId, status:event.target.value}, {headers: {token}})
-
-      if (response.data.success) {
-        await fetchAllOrders()
-      }
-      
+      const response = await axios.post(`${backendUrl}/api/order/status`, {
+        orderId,
+        status: event.target.value
+      });
+      if (response.data.success) fetchAllOrders();
+      else toast.error(response.data.message);
     } catch (error) {
-      console.log(error)
-      toast.error(response.data.message)
+      toast.error(error.message);
     }
-  }
+  };
 
   useEffect(() => {
     fetchAllOrders();
-  }, [token])
+  }, []);
 
   return (
     <div className="bg-white text-black min-h-screen p-8 font-sans">
       <h3 className="text-2xl font-bold mb-6 border-b border-black pb-2">Orders Page</h3>
-      
-      {orders.length === 0 && <p>No orders found.</p>}
-      
-      {orders.map((order, index) => (
-        <div
-          key={index}
-          className="border border-black rounded-lg p-5 mb-6 flex flex-row justify-between items-start gap-5 shadow-sm"
-        >
-          {/* Image */}
-          <img
-            src={assets.parcel_icon}
-            alt="parcel"
-            className="w-16 h-16 object-contain"
-          />
-
-          {/* Items & Customer Info */}
-          <div className="flex-1 flex flex-col gap-3">
-            {/* Items */}
-            <div>
-              <strong>Items:</strong>
-              <div className="flex flex-wrap gap-1">
-                {order.items.map((item, idx) => (
-                  <span key={idx}>
-                    {item.name} x {item.quantity} <span>({item.size})</span>
-                    {idx !== order.items.length - 1 && ","}
-                  </span>
-                ))}
+      {orders.length === 0 ? <p>No orders found.</p> :
+        orders.map((order, index) => (
+          <div key={index} className="border border-black rounded-lg p-5 mb-6 flex justify-between gap-5 shadow-sm">
+            <img src={assets.parcel_icon} alt="parcel" className="w-16 h-16 object-contain" />
+            <div className="flex-1 flex flex-col gap-3">
+              <div>
+                <strong>Items:</strong>
+                <div className="flex flex-wrap gap-1">
+                  {order.items.map((item, idx) => (
+                    <span key={idx}>
+                      {item.name} x {item.quantity} ({item.size}){idx !== order.items.length - 1 && ","}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <strong>Customer:</strong>
+                <p>{order.address.firstName} {order.address.lastName}</p>
+                <p>{order.address.street}, {order.address.city}, {order.address.state}, {order.address.country}, {order.address.pincode}</p>
+                <p>Phone: {order.address.phone}</p>
               </div>
             </div>
-
-            {/* Customer */}
-            <div>
-              <strong>Customer:</strong>
-              <p>{order.address.firstName} {order.address.lastName}</p>
-              <p>{order.address.street}, {order.address.city}, {order.address.state}, {order.address.country}, {order.address.pincode}</p>
-              <p>Phone: {order.address.phone}</p>
+            <div className="flex flex-col gap-3 items-end">
+              <p><strong>Amount:</strong> {currency}{order.amount}</p>
+              <p><strong>Payment:</strong> {order.payment ? "Done" : "Pending"}</p>
+              <p><strong>Date:</strong> {new Date(order.date).toLocaleDateString()}</p>
+              <select onChange={(e) => statusHandler(e, order._id)} value={order.status} className="border border-black rounded px-3 py-1 w-44 bg-white text-black">
+                <option value="Order Placed">Order Placed</option>
+                <option value="Packing">Packing</option>
+                <option value="Shipped">Shipped</option>
+                <option value="Out for delivery">Out for delivery</option>
+                <option value="Delivered">Delivered</option>
+              </select>
             </div>
           </div>
-
-          {/* Status & Payment */}
-          <div className="flex flex-col gap-3 items-end">
-            <p><strong>Amount:</strong> {currency}{order.amount}</p>
-            <p><strong>Payment:</strong> {order.payment ? "Done" : "Pending"}</p>
-            <p><strong>Date:</strong> {new Date(order.date).toLocaleDateString()}</p>
-            <select
-            onChange={(event)=>statusHandler(event,order._id)}
-             value={order.status}
-              className="border border-black rounded px-3 py-1 w-44 bg-white text-black"
-            >
-              <option value="Order Placed">Order Placed</option>
-              <option value="Packing">Packing</option>
-              <option value="Shipped">Shipped</option>
-              <option value="Out for delivery">Out for delivery</option>
-              <option value="Delivered">Delivered</option>
-            </select>
-          </div>
-        </div>
-      ))}
+        ))
+      }
     </div>
-  )
-}
+  );
+};
 
-export default Orders
+export default Orders;
