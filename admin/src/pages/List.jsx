@@ -3,15 +3,17 @@ import React, { useEffect, useState } from 'react'
 import { backendUrl, currency } from '../App'
 import { toast } from 'react-toastify'
 
-const List = ({ token }) => {
+const List = () => {
   const [list, setList] = useState([])
 
+  // Fetch all products
   const fetchList = async () => {
     try {
-      const response = await axios.get(backendUrl + "/api/product/list")
+      const API = import.meta.env.VITE_BACKEND_URL || backendUrl || "http://localhost:4000";
+      const response = await axios.get(`${API}/api/product/list`)  // No token required
 
       if (response.data.success) {
-        setList(response.data.products);
+        setList(response.data.products)
       } else {
         toast.error(response.data.message)
       }
@@ -21,17 +23,18 @@ const List = ({ token }) => {
     }
   }
 
+  // Remove product without authentication
   const removeProduct = async (id) => {
     try {
-      const response = await axios.post(backendUrl + "/api/product/remove", { id }, { headers: { token } })
+      const API = import.meta.env.VITE_BACKEND_URL || backendUrl || "http://localhost:4000";
+      const response = await axios.post(`${API}/api/product/remove`, { id })  // No headers
 
       if (response.data.success) {
         toast.success(response.data.message)
-        await fetchList();
+        await fetchList()
       } else {
         toast.error(response.data.message)
       }
-
     } catch (error) {
       console.log(error)
       toast.error(error.message)
@@ -61,7 +64,7 @@ const List = ({ token }) => {
           {
             list.map((item, index) => (
               <div key={index} className="grid grid-cols-5 gap-4 p-4 border-b items-center hover:bg-gray-50 transition">
-                <img src={item.image[0]} alt="" className="w-16 h-16 object-cover rounded-md" />
+                <img src={item.image?.[0] || ""} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
                 <p>{item.name}</p>
                 <p>{item.category}</p>
                 <p>{currency}{item.price}</p>
