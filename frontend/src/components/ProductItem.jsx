@@ -2,17 +2,18 @@ import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { ShopContext } from '../context/ShopContext';
 
-const ProductItem = ({ id, image, name, price, onAddToCart }) => {
+const ProductItem = ({ id, image, name, price,  }) => {
   const { currency } = useContext(ShopContext);
 
   return (
-    <div className="bg-white shadow-md rounded-xl overflow-hidden hover:shadow-xl transition-shadow duration-300 relative flex flex-col">
+    <div className='flex flex-col'>
+    <div className="bg-white shadow-md rounded-t-xl overflow-hidden hover:shadow-xl transition-shadow duration-300 relative flex flex-col">
       {/* Product Image */}
       <Link to={`/product/${id}`} className="overflow-hidden rounded-t-xl">
         <img
           src={image}
           alt={name}
-          className="w-full h-64 object-cover hover:scale-105 transition-transform duration-500"
+          className="w-full h-62 object-cover hover:scale-105 transition-transform duration-500"
         />
       </Link>
 
@@ -27,6 +28,15 @@ const ProductItem = ({ id, image, name, price, onAddToCart }) => {
 
        
       </div>
+     
+    </div>
+     <Link to={"/place-order"}>
+        <button
+              className="px-8 py-3 w-full rounded-b-xl border border-black font-semibold hover:bg-white bg-black text-white hover:text-black transition ease-in-out duration-500"
+            >
+              BUY
+            </button>
+            </Link>
     </div>
   );
 };

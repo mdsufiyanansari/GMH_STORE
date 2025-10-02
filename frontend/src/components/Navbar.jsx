@@ -27,7 +27,7 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="flex items-center py-5 justify-between font-medium">
+    <div className="flex items-center py-5 justify-around h-28 font-medium z-50 fixed top-0 left-0 w-full bg-slate-100/5 backdrop-blur-lg  ">
       <Link to="/">
         <img src={assets.scatch1} className="w-32" alt="logo" />
       </Link>

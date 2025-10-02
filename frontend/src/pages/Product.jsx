@@ -16,40 +16,38 @@ const Product = () => {
   const [mainImage, setMainImage] = useState("/placeholder.png");
   const [selectedSize, setSelectedSize] = useState("");
   const [rating, setRating] = useState(4);
+  const [loading, setLoading] = useState(true);
 
-  const [loading, setLoading] = useState(true); // ✅ loading state
+  // ✅ bottom sheet ke liye state
+  const [showSizeSheet, setShowSizeSheet] = useState(false);
 
   useEffect(() => {
-    setLoading(true); // start loading
-
-    // ✅ artificial delay to show loading GIF
+    setLoading(true);
     const timeout = setTimeout(() => {
       const foundProduct = products.find((p) => p._id === productId);
       if (foundProduct) {
         setProductData(foundProduct);
         setMainImage(foundProduct.image?.[0] || "/placeholder.png");
       }
-      setLoading(false); // stop loading
-    }, 600); 
-
+      setLoading(false);
+    }, 600);
     return () => clearTimeout(timeout);
   }, [productId, products]);
 
-  // ✅ Loading GIF overlay
   if (loading || !productData) {
     return (
-      <div className="fixed inset-0 bg-black  flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
         <img
           src="https://engineermart.in/web/site/assets/img/loader/loading.gif"
           alt="loading"
-          className="w-40 h-40"
+          className="w-28 h-28"
         />
       </div>
     );
   }
 
   return (
-    <div className="max-w-full mx-auto px-6 py-12">
+    <div className="max-w-7xl mx-auto px-6 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* LEFT */}
         <div>
@@ -60,75 +58,82 @@ const Product = () => {
               modules={[Pagination]}
               spaceBetween={20}
               slidesPerView={1}
-              className="rounded-xl shadow-lg"
+              className="rounded-2xl shadow-lg"
             >
-              {productData.image?.length > 0
-                ? productData.image.map((img, index) => (
-                    <SwiperSlide key={index}>
-                      <img
-                        src={img}
-                        alt={`product-${index}`}
-                        className="w-full h-80 object-cover rounded-xl"
-                      />
-                    </SwiperSlide>
-                  ))
-                : (
-                  <SwiperSlide>
+              {productData.image?.length > 0 ? (
+                productData.image.map((img, index) => (
+                  <SwiperSlide key={index}>
                     <img
-                      src="/placeholder.png"
-                      alt="placeholder"
-                      className="w-full h-80 object-cover rounded-xl"
+                      src={img}
+                      alt={`product-${index}`}
+                      className="w-full h-80 object-cover rounded-2xl"
                     />
                   </SwiperSlide>
-                )}
+                ))
+              ) : (
+                <SwiperSlide>
+                  <img
+                    src="/placeholder.png"
+                    alt="placeholder"
+                    className="w-full h-80 object-cover rounded-2xl"
+                  />
+                </SwiperSlide>
+              )}
             </Swiper>
           </div>
 
           {/* Desktop */}
-          <div className="hidden md:flex border p-1 gap-6">
+          <div className="hidden md:flex border rounded-2xl p-3 gap-6 bg-white shadow">
             {/* Thumbnails */}
-            <div className="flex md:flex-col md:w-36 w-full justify-center md:justify-start">
-              {productData.image?.length > 0
-                ? productData.image.map((img, index) => (
-                    <img
-                      key={index}
-                      src={img}
-                      alt={`thumb-${index}`}
-                      onClick={() => setMainImage(img)}
-                      className={`sm:w-40 sm:h-40 h-20 w-20 object-cover cursor-pointer border transition ${
-                        mainImage === img
-                          ? "border-black shadow-lg"
-                          : "border-gray-300"
-                      }`}
-                    />
-                  ))
-                : (
+            <div className="flex md:flex-col md:w-28 w-full gap-3">
+              {productData.image?.length > 0 ? (
+                productData.image.map((img, index) => (
                   <img
-                    src="/placeholder.png"
-                    alt="placeholder"
-                    className="h-20 w-20 object-cover border-gray-300"
+                    key={index}
+                    src={img}
+                    alt={`thumb-${index}`}
+                    onClick={() => setMainImage(img)}
+                    className={`w-20 h-20 md:w-24 md:h-24 rounded-lg object-cover cursor-pointer border transition-all ${
+                      mainImage === img
+                        ? "border-black shadow-md scale-105"
+                        : "border-gray-300 hover:border-black"
+                    }`}
                   />
-                )}
+                ))
+              ) : (
+                <img
+                  src="/placeholder.png"
+                  alt="placeholder"
+                  className="w-24 h-24 object-cover border-gray-300 rounded-lg"
+                />
+              )}
             </div>
 
             {/* Main Image */}
-            <div className="flex-1 flex justify-center items-center p-1">
+            <div className="flex-1 flex justify-center items-center">
               <img
                 src={mainImage}
                 alt={productData.name}
-                className="w-full h-full rounded-xl object-contain"
+                className="w-full max-h-[500px] rounded-2xl object-contain shadow-md"
               />
             </div>
           </div>
         </div>
 
         {/* RIGHT */}
-        <div className="flex flex-col justify-start">
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900">
+        <div className="flex flex-col justify-start space-y-6">
+          {/* ✅ Description Upar */}
+          <p className="text-gray-600 leading-relaxed">
+            {productData.description}
+          </p>
+
+          {/* Product Name */}
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
             {productData.name}
           </h1>
 
-          <div className="flex items-center mt-2">
+          {/* Rating */}
+          <div className="flex items-center">
             {Array.from({ length: 5 }, (_, i) =>
               i < rating ? (
                 <FaStar key={i} className="text-yellow-400 mr-1" />
@@ -136,68 +141,131 @@ const Product = () => {
                 <FaRegStar key={i} className="text-gray-300 mr-1" />
               )
             )}
-            <span className="text-gray-500 ml-2">({rating}.0)</span>
+            <span className="text-gray-600 ml-2 text-sm">({rating}.0)</span>
           </div>
 
-          <p className="text-3xl font-bold text-black mt-4">
-            {currency}{productData.price}
+          {/* Price */}
+          <p className="text-3xl font-bold text-gray-900">
+            {currency}
+            {productData.price}
           </p>
 
-          <div className="mt-4 text-gray-500">
-            <p><span className="font-medium">Category:</span> {productData.category}</p>
-            <p><span className="font-medium">Type:</span> {productData.subCategory}</p>
+          {/* Meta Info */}
+          <div className="text-gray-600 space-y-1">
+            <p>
+              <span className="font-semibold">Category:</span>{" "}
+              {productData.category}
+            </p>
+            <p>
+              <span className="font-semibold">Type:</span>{" "}
+              {productData.subCategory}
+            </p>
           </div>
 
-          {/* Sizes */}
-          <div className="mt-4">
-            <span className="font-medium text-gray-700">Size:</span>
-            <div className="flex gap-3 mt-2 flex-wrap">
-              {productData.sizes?.length > 0
-                ? productData.sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 border rounded-lg cursor-pointer transition ${
-                        selectedSize === size
-                          ? "bg-black text-white"
-                          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                      }`}
-                    >
-                      {size.toUpperCase()}
-                    </button>
-                  ))
-                : <p className="text-gray-500">No sizes available</p>
-              }
+          {/* Sizes (Desktop Only) */}
+          <div className="hidden md:block">
+            <span className="font-medium text-gray-700">Available Sizes:</span>
+            <div className="flex gap-3 mt-3 flex-wrap">
+              {productData.sizes?.length > 0 ? (
+                productData.sizes.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-4 py-2 rounded-lg border font-medium transition-all ${
+                      selectedSize === size
+                        ? "bg-black text-white border-black shadow-md"
+                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                    }`}
+                  >
+                    {size.toUpperCase()}
+                  </button>
+                ))
+              ) : (
+                <p className="text-gray-500">No sizes available</p>
+              )}
             </div>
           </div>
 
           {/* Add to Cart */}
-          <div className="flex gap-4 mt-6 flex-wrap">
-            <button
-              onClick={() => addToCart(productData._id, selectedSize)}
-              className={`px-6 py-3 rounded-lg shadow w-full md:w-auto transition ${
-                selectedSize
-                  ? "bg-black text-white hover:bg-gray-800"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-              }`}
-            >
-              Add to Cart
-            </button>
-          </div>
+          <button
+            onClick={() => {
+              if (window.innerWidth < 768) {
+                // ✅ Mobile me bottom sheet open hoga
+                setShowSizeSheet(true);
+              } else {
+                // ✅ Desktop me direct addToCart
+                addToCart(productData._id, selectedSize);
+              }
+            }}
+            className={`px-6 py-3 rounded-xl font-semibold shadow-lg transition-all w-full md:w-auto ${
+              selectedSize || window.innerWidth < 768
+                ? "bg-black text-white hover:bg-gray-900"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
 
-      {/* Description */}
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold mb-4">Product Description</h2>
-        <p className="text-gray-600 mb-6">{productData.description}</p>
-      </div>
+      {/* ✅ Bottom Sheet for Mobile */}
+      {showSizeSheet && (
+        <div className="fixed inset-0 bg-black/60 flex items-end z-50 md:hidden">
+          <div className="bg-white w-full rounded-t-2xl p-6 shadow-lg">
+            <h3 className="text-lg font-semibold mb-4">Choose Size</h3>
+            <div className="flex gap-3 flex-wrap">
+              {productData.sizes?.length > 0 ? (
+                productData.sizes.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-4 py-2 rounded-lg border font-medium transition-all ${
+                      selectedSize === size
+                        ? "bg-black text-white border-black shadow-md"
+                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                    }`}
+                  >
+                    {size.toUpperCase()}
+                  </button>
+                ))
+              ) : (
+                <p className="text-gray-500">No sizes available</p>
+              )}
+            </div>
+
+            <button
+              onClick={() => {
+                if (selectedSize) {
+                  addToCart(productData._id, selectedSize);
+                  setShowSizeSheet(false);
+                }
+              }}
+              className={`mt-6 px-6 py-3 rounded-xl font-semibold shadow-lg w-full ${
+                selectedSize
+                  ? "bg-black text-white hover:bg-gray-900"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
+            >
+              Confirm & Add to Cart
+            </button>
+
+            <button
+              onClick={() => setShowSizeSheet(false)}
+              className="mt-3 text-gray-500 w-full text-center"
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Related Products */}
-      <RelatedProducts
-        category={productData.category}
-        subCategory={productData.subCategory}
-      />
+      <div className="mt-16">
+        <RelatedProducts
+          category={productData.category}
+          subCategory={productData.subCategory}
+        />
+      </div>
     </div>
   );
 };

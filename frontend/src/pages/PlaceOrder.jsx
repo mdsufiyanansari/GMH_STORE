@@ -10,6 +10,8 @@ const PlaceOrder = () => {
   const { navigate, backendUrl, token, cartItems, setCartItems, getCartAmount, delivery_fee, products } = useContext(ShopContext);
 
   const [method, setMethod] = useState('cod');
+    const [loading, setLoading] = useState(true); // ✅ loading state
+
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -210,7 +212,26 @@ const PlaceOrder = () => {
     }
   };
 
+    useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+    // ✅ Loader screen (500ms)
+  if (loading) {
+    return (
+      <div className="flex justify-center bg-black items-center h-[60vh]">
+         <img
+          src="https://engineermart.in/web/site/assets/img/loader/loading.gif"
+          alt="loading"
+          className="w-40 h-40"
+        />
+      </div>
+    );
+  }
+
   return (
+    
     <form onSubmit={onSubmitHandler} className="flex flex-col md:flex-row gap-10 p-6">
 
       {/* Left Side */}

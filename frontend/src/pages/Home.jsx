@@ -16,11 +16,11 @@ const Home = () => {
   };
 
   return (
-    <div>
+    <div className='mt-48'>
       {/* ✅ Banner above Hero */}
       <div
         onClick={handleCollectionClick}
-        className="cursor-pointer bg-blue-600 text-white text-center py-4 font-semibold hover:bg-blue-700 transition"
+        className="cursor-pointer bg-black text-white text-center py-4  font-semibold hover:bg-gray-700 transition"
       >
         Explore Our Full Collection
       </div>

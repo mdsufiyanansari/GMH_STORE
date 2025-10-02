@@ -26,7 +26,7 @@ const Hero = () => {
   }
 
   return (
-    <div className="w-full p-4">
+    <div className="w-full md:p-4 py-2 ">
       <Swiper
         modules={[Pagination, Autoplay]}
         slidesPerView={1}                 // ✅ सिर्फ एक banner
