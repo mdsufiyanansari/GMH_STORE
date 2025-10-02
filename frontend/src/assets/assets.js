@@ -18,6 +18,8 @@ import image2 from "./image2.jpg";
 import image3 from "./image3.jpeg"
 import image4 from "./image4.jpeg"
 import cartlogo from "./cartlogo.png";
+import shoplogo from "./shoplogo.png"
+import noorder from "./noorder.gif"
 export const assets = {
   logo,
   scatch1,
@@ -26,6 +28,8 @@ export const assets = {
   hero_img,
   stripe,
   razorpay,
+  shoplogo,
+  noorder,
 cartlogo,
   img1,
   img2,

@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { ShopContext } from "../context/ShopContext";
 import Title from "../components/Title";
 import CartTotal from "../components/CartTotal";
-import { RiArrowLeftLine, RiDeleteBin6Line } from "react-icons/ri"; // 👈 added icons
+import { RiArrowLeftLine, RiDeleteBin6Line } from "react-icons/ri";
 import { assets } from "../assets/assets";
 
 const Cart = () => {
@@ -11,22 +11,26 @@ const Cart = () => {
 
   const [cartData, setCartData] = useState([]);
 
+  // Convert cartItems object to array for easier mapping
   useEffect(() => {
-    let tempData = [];
-
-    for (const items in cartItems) {
-      for (const item in cartItems[items]) {
-        if (cartItems[items][item] > 0) {
-          tempData.push({
-            _id: items,
-            size: item,
-            quantity: cartItems[items][item],
-          });
-        }
-      }
-    }
+    const tempData = Object.keys(cartItems).flatMap((productId) =>
+      Object.keys(cartItems[productId]).map((size) => ({
+        productId,
+        size,
+        quantity: cartItems[productId][size],
+      }))
+    );
     setCartData(tempData);
-  }, [cartItems, products]);
+  }, [cartItems]);
+
+  if (!products.length) {
+    // Wait until products are loaded
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p>Loading cart...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white text-black min-h-screen py-10 px-4">
@@ -36,6 +40,7 @@ const Cart = () => {
         className="flex items-center gap-2 border border-black px-4 py-2 rounded-md hover:bg-black hover:text-white transition"
       >
         <RiArrowLeftLine className="text-xl" />
+        Back to Collection
       </button>
 
       {/* Title */}
@@ -46,35 +51,36 @@ const Cart = () => {
       {/* Cart Items */}
       <div className="max-w-5xl mx-auto space-y-6">
         {cartData.length === 0 ? (
-          <div className="w-full h-1/2  justify-center items-center flex flex-col">
-          <img src={assets.cartlogo} alt="" />
-          <p className="text-center text-xl ml-14 text-gray-600">Your cart is empty.</p>
+          <div className="w-full h-1/2 flex flex-col justify-center items-center">
+            <img src={assets.cartlogo} alt="Empty Cart" />
+            <p className="text-center text-xl text-gray-600 mt-4">
+              Your cart is empty.
+            </p>
           </div>
         ) : (
           cartData.map((item, index) => {
-            const productData = products.find(
-              (product) => product._id === item._id
-            );
+            const productData = products.find((p) => p._id === item.productId);
+            if (!productData) return null; // Skip if product not found
 
             return (
               <div
                 key={index}
-                className="flex items-center justify-between border border-black rounded-xl p-4"
+                className="flex flex-col md:flex-row items-center justify-between border border-black rounded-xl p-4 gap-4"
               >
                 {/* Left - Product Info */}
-                <div className="flex items-center gap-6">
+                <div className="flex items-center gap-6 w-full md:w-auto">
                   <img
-                    onClick={() => navigate(`/product/${productData._id}`)}
-                    src={productData.image[0]}
-                    alt={productData.name}
+                    onClick={() => productData && navigate(`/product/${productData._id}`)}
+                    src={productData?.image?.[0] || "/placeholder.jpg"}
+                    alt={productData?.name || "Product"}
                     className="w-24 h-24 object-cover border border-black rounded-lg cursor-pointer hover:opacity-80 transition"
                   />
                   <div>
-                    <p className="font-semibold text-xl">{productData.name}</p>
+                    <p className="font-semibold text-xl">{productData?.name || "Product"}</p>
                     <div className="flex gap-6 text-sm mt-2">
                       <p className="font-medium">
                         {currency}
-                        {productData.price}
+                        {productData?.price || 0}
                       </p>
                       <p className="border px-2 py-1 rounded-md text-xs font-semibold">
                         Size: {item.size.toUpperCase()}
@@ -84,25 +90,20 @@ const Cart = () => {
                 </div>
 
                 {/* Right - Quantity & Delete */}
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 mt-4 md:mt-0">
                   <input
-                    onChange={(e) =>
-                      e.target.value === "" || e.target.value === "0"
-                        ? null
-                        : updateQuantity(
-                            item._id,
-                            item.size,
-                            Number(e.target.value)
-                          )
-                    }
                     type="number"
                     min={1}
-                    defaultValue={item.quantity}
+                    value={item.quantity}
+                    onChange={(e) => {
+                      const val = Number(e.target.value);
+                      if (val > 0) updateQuantity(item.productId, item.size, val);
+                    }}
                     className="w-16 border border-black rounded-lg px-2 py-1 text-center focus:outline-none"
                   />
 
                   <button
-                    onClick={() => updateQuantity(item._id, item.size, 0)}
+                    onClick={() => updateQuantity(item.productId, item.size, 0)}
                     className="p-2 border border-black rounded-md hover:bg-black transition"
                   >
                     <RiDeleteBin6Line className="text-red-500 hover:text-red-700 text-xl" />

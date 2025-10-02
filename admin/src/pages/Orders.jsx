@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from "axios";
-import { backendUrl, currency } from "../App";
+import { currency } from "../App";
 import { toast } from "react-toastify";
 import { assets } from '../assets/assets';
 
@@ -11,7 +11,7 @@ const Orders = () => {
   const fetchAllOrders = async () => {
     try {
       const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
-      const response = await axios.post(`${API}/api/order/list`); // Fixed missing API call
+      const response = await axios.post(`${API}/api/order/list`); 
       if (response.data.success) setOrders(response.data.orders.reverse());
       else toast.error(response.data.message);
     } catch (error) {
@@ -80,8 +80,16 @@ const Orders = () => {
 
             <div className="flex flex-col gap-3 items-end">
               <p><strong>Amount:</strong> {currency}{order.amount}</p>
-              <p><strong>Payment:</strong> {order.payment ? "Done" : "Pending"}</p>
+
+              <p><strong>Payment Method:</strong> {order.paymentMethod}</p>
+
+              <p>
+                <strong>Payment Status:</strong> 
+                {order.paymentMethod === "COD" ? "Pending" : order.payment ? "Done" : "Pending"}
+              </p>
+
               <p><strong>Date:</strong> {new Date(order.date).toLocaleDateString()}</p>
+
               <select
                 onChange={(e) => statusHandler(e, order._id)}
                 value={order.status}
