@@ -8,6 +8,9 @@ import Orders from "./pages/Orders";
 import AdsManager from "./pages/AdsManager";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import OrdersList from "./pages/OrdersList";
+import AdminDashboard from "./pages/AdminDashboard";
+
 
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const currency = "₹";
@@ -27,6 +30,8 @@ const App = () => {
             <Route path="/list" element={<List />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/ads" element={<AdsManager />} />
+            <Route path="/orderlist" element={<OrdersList/>}/>
+          <Route path="/admindashboard" element={<AdminDashboard />} />
           </Routes>
         </div>
       </div>

@@ -16,10 +16,13 @@ import cartRouter from "./routes/cartRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 import otpRoutes from "./routes/otpRoutes.js"
 import adsRoutes from "./routes/adsRoutes.js"
+import invoiceRouter from "./routes/invoiceRoute.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 // app config
 const app = express();
 const port = process.env.PORT || 4000;
+
 
 // connect database
 connectDB();
@@ -46,6 +49,11 @@ app.use("/api/order",orderRouter)
 app.use("/ads", adsRoutes);
 
 app.use("/api", otpRoutes);
+
+app.use("/api/order/invoice", invoiceRouter);
+
+app.use("/api/admin", adminRoutes);
+
 
 app.get("/", (req, res) => {
   res.send("API WORKING 🚀");

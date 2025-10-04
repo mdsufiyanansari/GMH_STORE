@@ -86,7 +86,7 @@ const Collection = () => {
   }
 
   return (
-    <div className="flex flex-col sm:flex-row gap-8 px-6 md:px-12 lg:px-20 my-10">
+    <div className="flex flex-col sm:flex-row gap-8 px-6 md:px-12 lg:px-20 my-40">
       {/* Filters Section */}
       <div className="w-full sm:w-1/4">
         <div
@@ -146,8 +146,8 @@ const Collection = () => {
 
       {/* Products Section */}
       <div className="flex-1">
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
-          <Title text1={"ALL"} text2={"COLLECTIONS"} />
+        <div className="flex flex-col md:text-2xl font-bold text-xl sm:flex-row justify-between items-center  mb-6">
+          <Title  text1={"ALL"} text2={"COLLECTIONS"} />
           <select
             onChange={(e) => setSortType(e.target.value)}
             className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-500 mt-3 sm:mt-0"

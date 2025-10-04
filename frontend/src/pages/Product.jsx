@@ -36,7 +36,7 @@ const Product = () => {
 
   if (loading || !productData) {
     return (
-      <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50">
+      <div className="fixed  inset-0 bg-black flex items-center justify-center z-50">
         <img
           src="https://engineermart.in/web/site/assets/img/loader/loading.gif"
           alt="loading"
@@ -47,7 +47,7 @@ const Product = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-12">
+    <div className="max-w-7xl mt-28 mx-auto px-6 py-12">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* LEFT */}
         <div>
