@@ -46,7 +46,7 @@ const List = () => {
   }, [])
 
   return (
-    <div className="p-6">
+    <div className="p-6 w-[80%] ml-[20vw]">
       <p className="text-xl font-semibold mb-4">All Products List</p>
 
       <div className="overflow-x-auto">

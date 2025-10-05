@@ -17,21 +17,22 @@ export const currency = "₹";
 
 const App = () => {
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50  min-h-screen">
+
       <ToastContainer />
       <Navbar />
       <hr />
       <div className="flex w-full">
         <Sidebar />
         {/* Main content area */}
-        <div className="flex-1 p-4">
+        <div className="flex-1 p-4 ">
           <Routes>
             <Route path="/add" element={<Add />} />
             <Route path="/list" element={<List />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/ads" element={<AdsManager />} />
             <Route path="/orderlist" element={<OrdersList/>}/>
-          <Route path="/admindashboard" element={<AdminDashboard />} />
+          <Route path="/" element={<AdminDashboard />} />
           </Routes>
         </div>
       </div>

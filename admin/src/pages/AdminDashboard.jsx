@@ -56,7 +56,7 @@ const AdminDashboard = () => {
   ];
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen font-sans">
+    <div className="p-8 w-[80%] ml-[20vw] bg-gray-100 min-h-screen font-sans">
       <h1 className="text-3xl md:text-4xl font-bold mb-10 text-gray-800 tracking-wide">
         📊 Admin Dashboard
       </h1>

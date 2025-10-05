@@ -42,14 +42,14 @@ const OrdersList = () => {
   }, []);
 
   return (
-    <div className="bg-white text-black min-h-screen p-8 font-sans">
+    <div className="bg-white text-black min-h-screen p-8 font-sans w-[80%] ml-[20vw] ">
       <h3 className="text-2xl font-bold mb-6 border-b border-black pb-2">Orders Page</h3>
 
       {orders.length === 0 ? (
         <p>No orders found.</p>
       ) : (
         orders.map((order, index) => (
-          <div key={index} className="border border-black rounded-lg p-5 mb-6 flex justify-between gap-5 shadow-sm">
+          <div key={index} className="border  border-black rounded-lg p-5 mb-6 flex justify-between gap-5 shadow-sm">
 
             {/* Display first item image safely */}
             <img

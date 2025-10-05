@@ -145,7 +145,7 @@ const Product = () => {
           </div>
 
           {/* Price */}
-          <p className="text-3xl font-bold text-gray-900">
+          <p className="text-3xl font-bold text-gray-900 ">
             {currency}
             {productData.price}
           </p>

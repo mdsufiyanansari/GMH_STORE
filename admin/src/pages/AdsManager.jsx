@@ -56,7 +56,7 @@ const AdsManager = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 w-[80%] ml-[20vw]">
       <ToastContainer />
       <h2 className="text-xl font-bold mb-4">Advertisement Manager</h2>
 

@@ -12,8 +12,17 @@ import { NavLink } from 'react-router-dom';
 const Sidebar = () => {
   return (
 
-    <div className="w-[18%] min-h-screen border-r-2">
+    <div className="w-[18%] min-h-screen border-r-2 fixed">
     <div className="  flex flex-col gap-4 pt-6 pl-[20%] text-[15px]">
+
+        <NavLink
+        to="/"
+       className="flex items-center space-x-2 px-3 border-r-0 border border-gray-300 py-2 transition-colors duration-200 hover:bg-gray-100"
+      >
+        <BsFileBarGraphFill className="text-xl" />
+        <p className="text-sm font-medium hidden md:block">Dashboard</p>
+      </NavLink>
+
       <NavLink
         to="/add"
         className="flex items-center space-x-2 px-3 border-r-0 border border-gray-300 py-2 transition-colors duration-200 hover:bg-gray-100"
@@ -54,13 +63,7 @@ const Sidebar = () => {
         <p className="text-sm font-medium hidden md:block">Ads </p>
       </NavLink>
 
-      <NavLink
-        to="/admindashboard"
-       className="flex items-center space-x-2 px-3 border-r-0 border border-gray-300 py-2 transition-colors duration-200 hover:bg-gray-100"
-      >
-        <BsFileBarGraphFill className="text-xl" />
-        <p className="text-sm font-medium hidden md:block">Dashboard</p>
-      </NavLink>
+     
 
     </div>
     </div>

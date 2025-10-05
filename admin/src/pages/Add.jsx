@@ -66,7 +66,7 @@ const Add = () => {
   };
 
   return (
-    <form onSubmit={onSubmitHandler} className="p-6 bg-white max-w-4xl space-y-4 mx-auto">
+    <form onSubmit={onSubmitHandler} className="p-6  bg-white max-w-4xl space-y-4 mx-auto">
       {/* ---------------- Upload Images ---------------- */}
       <div className="mb-6">
         <p className="text-lg font-semibold mb-3 text-black">Upload Image</p>

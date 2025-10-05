@@ -10,8 +10,7 @@ const PlaceOrder = () => {
   const { navigate, backendUrl, token, cartItems, setCartItems, getCartAmount, delivery_fee, products } = useContext(ShopContext);
 
   const [method, setMethod] = useState('cod');
-    const [loading, setLoading] = useState(true); // ✅ loading state
-
+  const [loading, setLoading] = useState(true);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -27,19 +26,13 @@ const PlaceOrder = () => {
   });
 
   const [isPinValid, setIsPinValid] = useState(true);
-
-  // OTP States
   const [otpSent, setOtpSent] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpVerified, setOtpVerified] = useState(false);
 
-  // ------------------ LOGIN CHECK ------------------
   useEffect(() => {
-    if (!token) {
-      navigate('/login'); // agar user login nahi hai, login page pe redirect
-    }
+    if (!token) navigate('/login');
   }, [token]);
-  // -------------------------------------------------
 
   const onChangeHandler = (event) => {
     const name = event.target.name;
@@ -62,22 +55,21 @@ const PlaceOrder = () => {
           state: postOffice.State,
           district: postOffice.District
         }));
-        setIsPinValid(true)
+        setIsPinValid(true);
       } else {
         setFormData(data => ({
           ...data,
           state: "",
           district: ""
         }));
-        setIsPinValid(false)
+        setIsPinValid(false);
       }
     } catch (err) {
       console.error(err);
-      setIsPinValid(false)
+      setIsPinValid(false);
     }
   };
 
-  // ------------------- SEND OTP -------------------
   const sendOtp = async () => {
     if (!formData.phone) return toast.error("Please enter phone number!");
     try {
@@ -93,9 +85,7 @@ const PlaceOrder = () => {
       toast.error("Error sending OTP");
     }
   };
-  // ------------------------------------------------
 
-  // ------------------- VERIFY OTP ----------------
   const verifyOtp = async () => {
     if (!otp) return toast.error("Enter OTP!");
     try {
@@ -111,13 +101,12 @@ const PlaceOrder = () => {
       toast.error("Error verifying OTP");
     }
   };
-  // --------------------------------------------------
 
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
     if (!isPinValid) {
-      toast.error("Invalid Pincode! Please enter a correct one.")
+      toast.error("Invalid Pincode! Please enter a correct one.");
       return;
     }
 
@@ -159,10 +148,10 @@ const PlaceOrder = () => {
           );
 
           if (response.data.success) {
-            setCartItems({})
-            navigate("/orders")
+            setCartItems({});
+            navigate("/orders");
           } else {
-            toast.error(response.data.message)
+            toast.error(response.data.message);
           }
           break;
 
@@ -175,6 +164,17 @@ const PlaceOrder = () => {
 
           if (responseRazorpay.data.success) {
             const { order } = responseRazorpay.data;
+
+            // ✅ Ensure Razorpay script is loaded
+            if (!window.Razorpay) {
+              await new Promise((resolve, reject) => {
+                const script = document.createElement("script");
+                script.src = "https://checkout.razorpay.com/v1/checkout.js";
+                script.onload = resolve;
+                script.onerror = reject;
+                document.body.appendChild(script);
+              });
+            }
 
             const options = {
               key: import.meta.env.VITE_RAZORPAY_KEY_ID,
@@ -192,14 +192,13 @@ const PlaceOrder = () => {
               prefill: {
                 name: formData.firstName + " " + formData.lastName,
                 email: formData.email,
-                contact: formData.phone
-              }
+                contact: formData.phone,
+              },
             };
 
-            const rzp = new window.Razorpay(options);
+            const rzp = new window.Razorpay(options); // ✅ fixed
             rzp.open();
           }
-
           break;
 
         default:
@@ -208,20 +207,19 @@ const PlaceOrder = () => {
 
     } catch (error) {
       console.error(error);
-      toast.error(error.message)
+      toast.error(error.message);
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 500);
     return () => clearTimeout(timer);
   }, []);
 
-    // ✅ Loader screen (500ms)
   if (loading) {
     return (
       <div className="flex justify-center bg-black items-center h-[60vh]">
-         <img
+        <img
           src="https://engineermart.in/web/site/assets/img/loader/loading.gif"
           alt="loading"
           className="w-40 h-40"
@@ -231,7 +229,6 @@ const PlaceOrder = () => {
   }
 
   return (
-    
     <form onSubmit={onSubmitHandler} className="flex flex-col md:flex-row gap-10 p-6">
 
       {/* Left Side */}
@@ -298,7 +295,6 @@ const PlaceOrder = () => {
         )}
 
         {otpVerified && <p className="text-green-600 mb-4">Phone verified ✅</p>}
-
       </div>
 
       {/* Right Side */}
@@ -307,7 +303,6 @@ const PlaceOrder = () => {
         <div className="mt-10">
           <Title text1={"PAYMENT"} text2={"METHOD"} />
           <div className="mt-6 space-x-4 flex">
-
             <div onClick={() => setMethod('razorpay')} className="flex items-center gap-4 border rounded-lg p-3 cursor-pointer hover:shadow-md transition">
               <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'razorpay' ? 'bg-green-400' : ''}`}></p>
               <img src={assets.razorpay} alt="Razorpay" className="h-6 object-contain" />
@@ -317,7 +312,6 @@ const PlaceOrder = () => {
               <p className={`min-w-3.5 h-3.5 border rounded-full ${method === 'cod' ? 'bg-green-400' : ''}`}></p>
               <p className="text-gray-700 font-medium">CASH ON DELIVERY</p>
             </div>
-
           </div>
         </div>
 
@@ -325,9 +319,8 @@ const PlaceOrder = () => {
           <button type='submit' className="bg-black text-white px-16 py-3 text-sm">PLACE ORDER</button>
         </div>
       </div>
-
     </form>
-  )
-}
+  );
+};
 
-export default PlaceOrder;  
+export default PlaceOrder;
