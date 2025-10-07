@@ -8,7 +8,7 @@ const Orders = () => {
 
   const fetchOrders = async () => {
     try {
-      const API = "http://localhost:4000";
+     const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
       const res = await axios.post(`${API}/api/order/list`);
       if (res.data.success) setOrders(res.data.orders.reverse());
     } catch (err) {
@@ -18,7 +18,7 @@ const Orders = () => {
 
   const downloadInvoice = async (orderId) => {
     try {
-      const API = "http://localhost:4000";
+      const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
       const res = await axios.get(`${API}/api/order/invoice/${orderId}`, {
         responseType: "blob",
       });

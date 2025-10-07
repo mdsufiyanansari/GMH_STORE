@@ -19,7 +19,7 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await axios.get("http://localhost:4000/api/admin/dashboard");
+       const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
 
         // Total stats
         setStats({

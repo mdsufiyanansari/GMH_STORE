@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { FaStar, FaRegStar } from "react-icons/fa";
@@ -18,8 +18,10 @@ const Product = () => {
   const [rating, setRating] = useState(4);
   const [loading, setLoading] = useState(true);
 
-  // ✅ bottom sheet ke liye state
   const [showSizeSheet, setShowSizeSheet] = useState(false);
+
+  // ✅ Swiper ref for mobile thumbnails
+  const swiperRef = useRef(null);
 
   useEffect(() => {
     setLoading(true);
@@ -36,7 +38,7 @@ const Product = () => {
 
   if (loading || !productData) {
     return (
-      <div className="fixed  inset-0 bg-black flex items-center justify-center z-50">
+      <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
         <img
           src="https://engineermart.in/web/site/assets/img/loader/loading.gif"
           alt="loading"
@@ -54,6 +56,7 @@ const Product = () => {
           {/* Mobile Swiper */}
           <div className="md:hidden">
             <Swiper
+              onSwiper={(swiper) => (swiperRef.current = swiper)}
               pagination={{ clickable: true }}
               modules={[Pagination]}
               spaceBetween={20}
@@ -80,6 +83,27 @@ const Product = () => {
                 </SwiperSlide>
               )}
             </Swiper>
+
+            {/* ✅ Bottom Thumbnails for Mobile */}
+            <div className="flex gap-3 mt-4 overflow-x-auto justify-center px-2">
+              {productData.image?.length > 0 &&
+                productData.image.map((img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={`thumb-${index}`}
+                    onClick={() => {
+                      setMainImage(img); // optional for border highlight
+                      swiperRef.current?.slideTo(index); // change Swiper slide
+                    }}
+                    className={`w-20 h-20 rounded-lg object-cover cursor-pointer border transition-all ${
+                      mainImage === img
+                        ? "border-black shadow-md scale-105"
+                        : "border-gray-300 hover:border-black"
+                    }`}
+                  />
+                ))}
+            </div>
           </div>
 
           {/* Desktop */}
@@ -122,17 +146,11 @@ const Product = () => {
 
         {/* RIGHT */}
         <div className="flex flex-col justify-start space-y-6">
-          {/* ✅ Description Upar */}
-          <p className="text-gray-600 leading-relaxed">
-            {productData.description}
-          </p>
-
-          {/* Product Name */}
+          <p className="text-gray-600 leading-relaxed">{productData.description}</p>
           <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
             {productData.name}
           </h1>
 
-          {/* Rating */}
           <div className="flex items-center">
             {Array.from({ length: 5 }, (_, i) =>
               i < rating ? (
@@ -144,21 +162,17 @@ const Product = () => {
             <span className="text-gray-600 ml-2 text-sm">({rating}.0)</span>
           </div>
 
-          {/* Price */}
           <p className="text-3xl font-bold text-gray-900 ">
             {currency}
             {productData.price}
           </p>
 
-          {/* Meta Info */}
           <div className="text-gray-600 space-y-1">
             <p>
-              <span className="font-semibold">Category:</span>{" "}
-              {productData.category}
+              <span className="font-semibold">Category:</span> {productData.category}
             </p>
             <p>
-              <span className="font-semibold">Type:</span>{" "}
-              {productData.subCategory}
+              <span className="font-semibold">Type:</span> {productData.subCategory}
             </p>
           </div>
 
@@ -186,16 +200,10 @@ const Product = () => {
             </div>
           </div>
 
-          {/* Add to Cart */}
           <button
             onClick={() => {
-              if (window.innerWidth < 768) {
-                // ✅ Mobile me bottom sheet open hoga
-                setShowSizeSheet(true);
-              } else {
-                // ✅ Desktop me direct addToCart
-                addToCart(productData._id, selectedSize);
-              }
+              if (window.innerWidth < 768) setShowSizeSheet(true);
+              else addToCart(productData._id, selectedSize);
             }}
             className={`px-6 py-3 rounded-xl font-semibold shadow-lg transition-all w-full md:w-auto ${
               selectedSize || window.innerWidth < 768
@@ -208,7 +216,7 @@ const Product = () => {
         </div>
       </div>
 
-      {/* ✅ Bottom Sheet for Mobile */}
+      {/* Bottom Sheet for Mobile */}
       {showSizeSheet && (
         <div className="fixed inset-0 bg-black/60 flex items-end z-50 md:hidden">
           <div className="bg-white w-full rounded-t-2xl p-6 shadow-lg">
