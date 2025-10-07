@@ -1,6 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
 import productModel from "../models/productModel.js";
-import { json } from "express";
 
 //function for add product
 const addProduct = async (req, res) => {
@@ -9,6 +8,7 @@ const addProduct = async (req, res) => {
       name,
       description,
       price,
+    
       category,
       subCategory,
       sizes,
@@ -24,6 +24,7 @@ const addProduct = async (req, res) => {
       (item) => item !== undefined
     );
 
+    // Cloudinary upload
     let imagesUrl = await Promise.all(
       images.map(async (item) => {
         let result = await cloudinary.uploader.upload(item.path, {
@@ -33,11 +34,14 @@ const addProduct = async (req, res) => {
       })
     );
 
+ 
+
     const productData = {
       name,
       description,
       category,
-      price: Number(price) || 0, // agar NaN hua to default 0
+      price: Number(price) || 0,
+     
       subCategory,
       bestseller: bestseller === "true",
       sizes: JSON.parse(sizes),
@@ -45,15 +49,12 @@ const addProduct = async (req, res) => {
       date: Date.now(),
     };
 
-    console.log(productData);
-
     const product = new productModel(productData);
     await product.save();
 
-    res.json({ success: true, message: "product added" });
+    res.json({ success: true, message: "Product added", product });
   } catch (error) {
     console.log(error);
-
     res.json({ success: false, message: error.message });
   }
 };
@@ -61,47 +62,34 @@ const addProduct = async (req, res) => {
 //function for list product
 const listProduct = async (req, res) => {
   try {
-
     const products = await productModel.find({});
-    res.json({success:true,products})
-    
+    res.json({ success: true, products });
   } catch (error) {
-     console.log(error);
-
+    console.log(error);
     res.json({ success: false, message: error.message });
-    
-    
   }
-    
 };
 
 //function for removing product
 const removeProduct = async (req, res) => {
   try {
-    await productModel.findByIdAndDelete(req.body.id)
-    res.json({success:true, message:"product removed"})
-    
+    await productModel.findByIdAndDelete(req.body.id);
+    res.json({ success: true, message: "Product removed" });
   } catch (error) {
     console.log(error);
-
     res.json({ success: false, message: error.message });
-    
   }
 };
 
 //function for single product info
 const singleProduct = async (req, res) => {
   try {
-
-    const { productId } =req.body
-    const product = await productModel.findById(productId)
-    res.json({success:true,product})
-    
+    const { productId } = req.body;
+    const product = await productModel.findById(productId);
+    res.json({ success: true, product });
   } catch (error) {
     console.log(error);
-
     res.json({ success: false, message: error.message });
-    
   }
 };
 

@@ -11,8 +11,7 @@ const productSchema = new mongoose.Schema({
   bestseller: { type: Boolean, default: false },
   date: { type: Date, default: Date.now },     // auto timestamp
 
-   offerPrice: { type: Number, default: 0 },
-  offerPercent: { type: Number, default: 0 },
+   
 });
 
 const productModel = mongoose.models.Product || mongoose.model("Product", productSchema);

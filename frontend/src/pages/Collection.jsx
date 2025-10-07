@@ -70,7 +70,7 @@ const Collection = () => {
       const timer = setTimeout(() => setLoading(false), 600);
       return () => clearTimeout(timer);
     }
-  }, [products, category, subCategories, searchQuery, sortType]);
+  }, [products, category, subCategories, searchQuery, sortType,]);
 
   // Loading screen
   if (loading) {
@@ -165,15 +165,18 @@ const Collection = () => {
                 key={item._id}
                 id={item._id}
                 name={item.name}
+        
                 price={item.price}
                 image={item.image[0]}
               />
+            
             ))
           ) : (
             <p className="text-gray-500 col-span-full text-center">
               No products found.
             </p>
           )}
+          
         </div>
       </div>
     </div>
