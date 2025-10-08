@@ -20,6 +20,7 @@ const AdminDashboard = () => {
     const fetchStats = async () => {
       try {
        const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+         const res = await axios.get(`${API}/api/dashboard/dashboard`);
 
         // Total stats
         setStats({
