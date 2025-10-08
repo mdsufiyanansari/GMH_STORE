@@ -19,10 +19,9 @@ const AdminDashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-       const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
-         const res = await axios.get(`${API}/api/dashboard/dashboard`);
+        const API = import.meta.env.VITE_BACKEND_URL || "http://localhost:4000";
+        const res = await axios.get(`${API}/api/admin/dashboard`);
 
-        // Total stats
         setStats({
           totalOrders: res.data.totalOrders,
           totalUsers: res.data.totalUsers,
@@ -30,7 +29,6 @@ const AdminDashboard = () => {
           totalRevenue: res.data.totalRevenue,
         });
 
-        // Today stats
         setTodayStats({
           orders: res.data.todayOrders,
           users: res.data.todayUsers,
@@ -66,7 +64,7 @@ const AdminDashboard = () => {
         {cards.map((card, index) => (
           <div
             key={index}
-            className={`bg-white shadow-xl rounded-xl p-6 text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl`}
+            className="bg-white shadow-xl rounded-xl p-6 text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl"
           >
             <h2 className={`text-xl font-semibold mb-2 bg-clip-text text-transparent bg-gradient-to-r ${card.gradient}`}>
               {card.title}
