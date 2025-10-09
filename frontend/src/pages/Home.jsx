@@ -16,7 +16,8 @@ const Home = () => {
   };
 
   return (
-    <div className='mt-48'>
+    <div className='mt-28 py-10'>
+      <div >
       {/* ✅ Banner above Hero */}
       <div
         onClick={handleCollectionClick}
@@ -30,6 +31,7 @@ const Home = () => {
       <BestSeller />
       <OurPolicy />
       <NewsletterBox />
+      </div>
     </div>
   );
 };

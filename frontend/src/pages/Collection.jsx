@@ -86,9 +86,11 @@ const Collection = () => {
   }
 
   return (
-    <div className="flex flex-col sm:flex-row gap-8 px-6 md:px-12 lg:px-20 my-40">
+    <div className="flex flex-col sm:flex-row gap-8  md:px-2 lg:px-2 mt-14">
       {/* Filters Section */}
-      <div className="w-full sm:w-1/4">
+
+      <div className="flex flex-col sm:flex-row gap-8 px-2 mt-28">
+      <div className="w-full sm:w-[20%] ">
         <div
           className="flex items-center sm:block cursor-pointer sm:cursor-default"
           onClick={() => setShowFilter(!showFilter)}
@@ -145,7 +147,7 @@ const Collection = () => {
       </div>
 
       {/* Products Section */}
-      <div className="flex-1">
+      <div className="flex-1  ">
         <div className="flex flex-col md:text-2xl font-bold text-xl sm:flex-row justify-between items-center  mb-6">
           <Title  text1={"ALL"} text2={"COLLECTIONS"} />
           <select
@@ -158,7 +160,7 @@ const Collection = () => {
           </select>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((item) => (
               <ProductItem
@@ -178,6 +180,7 @@ const Collection = () => {
           )}
           
         </div>
+      </div>
       </div>
     </div>
   );

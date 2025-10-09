@@ -4,14 +4,13 @@ const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
-  image: { type: [String], required: true },   // array of image URLs
-  category: { type: String, required: true },  // e.g. "Men", "Women"
-  subCategory: { type: String, required: true }, // e.g. "Topwear"
-  sizes: { type: [String], required: true },    // ["M", "L", "XL"]
+  offerPrice: { type: Number, required: true }, // ✅ Offer Price
+  image: { type: [String], required: true },
+  category: { type: String, required: true },
+  subCategory: { type: String, required: true },
+  sizes: { type: [String], required: true },
   bestseller: { type: Boolean, default: false },
-  date: { type: Date, default: Date.now },     // auto timestamp
-
-   
+  date: { type: Date, default: Date.now }
 });
 
 const productModel = mongoose.models.Product || mongoose.model("Product", productSchema);

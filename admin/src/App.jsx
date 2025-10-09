@@ -12,6 +12,7 @@ import OrdersList from "./pages/OrdersList";
 import AdminDashboard from "./pages/AdminDashboard";
 
 
+
 export const backendUrl = import.meta.env.VITE_BACKEND_URL;
 export const currency = "₹";
 
@@ -33,6 +34,7 @@ const App = () => {
             <Route path="/ads" element={<AdsManager />} />
             <Route path="/orderlist" element={<OrdersList/>}/>
           <Route path="/" element={<AdminDashboard />} />
+          
           </Routes>
         </div>
       </div>

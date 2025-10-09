@@ -6,7 +6,7 @@ import { ShieldCheck, Truck, Headphones } from 'lucide-react' // icons
 
 const About = () => {
   return (
-    <div className="px-6 md:px-16 lg:px-28">
+    <div className="px-6 md:px-16 mt-24 lg:px-28">
       {/* About Us Section */}
       <div className="text-2xl text-center pt-8 border-t">
         <Title text1={'ABOUT'} text2={'US'} />

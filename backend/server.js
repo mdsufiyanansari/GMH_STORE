@@ -19,6 +19,8 @@ import adsRoutes from "./routes/adsRoutes.js"
 import invoiceRouter from "./routes/invoiceRoute.js";
 import adminRoutes from "./routes/adminRoutes.js";
 
+
+
 // app config
 const app = express();
 const port = process.env.PORT || 4000;
@@ -31,8 +33,8 @@ connectDB();
 connectCloudinary();
 
 // middleware
-// app.use(express.json());
-// app.use(cors());
+app.use(express.json());
+app.use(cors());
 
 app.use(express.json());
 app.use(corsMiddleware); 
@@ -53,6 +55,11 @@ app.use("/api", otpRoutes);
 app.use("/api/order/invoice", invoiceRouter);
 
 app.use("/api/admin", adminRoutes);
+
+
+
+
+
 
 
 app.get("/", (req, res) => {

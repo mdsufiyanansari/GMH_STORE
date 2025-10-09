@@ -33,14 +33,14 @@ const Cart = () => {
   }
 
   return (
-    <div className="bg-white text-black min-h-screen py-10 px-4">
+    <div className=" text-black min-h-screen py-10 px-4 mt-24">
       {/* Back Button */}
       <button
         onClick={() => navigate("/collection")}
-        className="flex items-center gap-2 border border-black px-4 py-2 rounded-md hover:bg-black hover:text-white transition"
+        className="flex items-center fixed gap-2 border  border-black px-4 py-2 rounded-md hover:bg-black hover:text-white transition"
       >
         <RiArrowLeftLine className="text-xl" />
-        Back to Collection
+       <h1 className="md:block hidden"> Back to Collection</h1>
       </button>
 
       {/* Title */}

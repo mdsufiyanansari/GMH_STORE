@@ -63,6 +63,14 @@ const Sidebar = () => {
         <p className="text-sm font-medium hidden md:block">Ads </p>
       </NavLink>
 
+         <NavLink
+        to="/admin-return"
+        className="flex items-center space-x-2 px-3 border-r-0 border border-gray-300 py-2 transition-colors duration-200 hover:bg-gray-100"
+      >
+        <FcAdvertising className="text-xl" />
+        <p className="text-sm font-medium hidden md:block">Return-Orders</p>
+      </NavLink>
+
      
 
     </div>

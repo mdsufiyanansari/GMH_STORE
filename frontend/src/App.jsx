@@ -14,12 +14,13 @@ import SearchBar from "./components/SearchBar";
 import ScrollToTop from "./components/ScrollToTop";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
+import TrackOrder from "./pages/TrackOrder";
 
 import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   return (
-    <div className="px-1 sm:px-[5vw] md:px-[2vw] lg:px-[4vw]">
+    <div className="px-1 sm:px-[5vw] md:px-[2vw] lg:px-[4vw] bg-[#F2F2EB]">
       <ToastContainer />
       <Navbar/>
       <SearchBar />
@@ -33,6 +34,7 @@ const App = () => {
         <Route path="/collection" element={<Collection />} />
         <Route path="/product/:productId" element={<Product />} />
         <Route path="/cart" element={<Cart />} />
+        
 
         {/* Login Page */}
         <Route path="/login" element={<Login />} />
@@ -54,6 +56,7 @@ const App = () => {
             </PrivateRoute>
           }
         />
+        <Route path="/track/:orderId" element={<TrackOrder />} />
         <Route
           path="/profile"
           element={

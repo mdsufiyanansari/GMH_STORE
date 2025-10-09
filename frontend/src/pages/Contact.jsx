@@ -6,8 +6,9 @@ import { MapPin, Phone, Mail } from 'lucide-react'
 
 const Contact = () => {
   return (
-    <div className="px-6 md:px-16 lg:px-28">
+    <div className="px-6 md:px-16 mt-28 py-10 lg:px-28">
       {/* Heading */}
+      <div className="">
       <div className="text-2xl text-center mt-16">
         <Title text1={'CONTACT'} text2={'US'} />
       </div>
@@ -50,6 +51,7 @@ const Contact = () => {
 
       {/* Newsletter */}
       <NewsletterBox />
+      </div>
     </div>
   )
 }
