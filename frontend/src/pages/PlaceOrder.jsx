@@ -229,7 +229,7 @@ const PlaceOrder = () => {
   }
 
   return (
-    <form onSubmit={onSubmitHandler} className="flex flex-col md:flex-row gap-10 p-6">
+    <form onSubmit={onSubmitHandler} className="flex flex-col py-32 md:flex-row gap-10 p-6">
 
       {/* Left Side */}
       <div className="flex-1 bg-white shadow-lg rounded-2xl p-6">

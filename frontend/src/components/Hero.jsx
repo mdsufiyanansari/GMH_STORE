@@ -26,14 +26,14 @@ const Hero = () => {
   }
 
   return (
-    <div className="w-full md:p-4 py-2 ">
+    <div className="w-full md:p-4 py-2  ">
       <Swiper
         modules={[Pagination, Autoplay]}
         slidesPerView={1}                 // ✅ सिर्फ एक banner
         loop={true}                       // ✅ continuously loop
         autoplay={{ delay: 5000 }}        // ✅ 5 सेकंड में auto slide
         pagination={{ clickable: true }}
-        className="w-full h-64 md:h-72 lg:h-80 overflow-hidden"
+        className="w-full h-64 md:h-80 lg:h-[500px] overflow-hidden"
       >
         {ads.map((ad) => (
           <SwiperSlide key={ad._id}>

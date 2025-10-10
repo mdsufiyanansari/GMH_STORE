@@ -15,6 +15,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import Profile from "./pages/Profile";
 import PrivateRoute from "./components/PrivateRoute";
 import TrackOrder from "./pages/TrackOrder";
+import MyAccount from "./pages/MyAccount";
 
 import { ToastContainer } from 'react-toastify';
 
@@ -34,6 +35,8 @@ const App = () => {
         <Route path="/collection" element={<Collection />} />
         <Route path="/product/:productId" element={<Product />} />
         <Route path="/cart" element={<Cart />} />
+        {/* <Route path="/myaccount" element={<MyAccount />} /> */}
+
         
 
         {/* Login Page */}

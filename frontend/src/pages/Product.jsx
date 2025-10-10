@@ -200,19 +200,32 @@ const Product = () => {
             </div>
           </div>
 
-          <button
-            onClick={() => {
-              if (window.innerWidth < 768) setShowSizeSheet(true);
-              else addToCart(productData._id, selectedSize);
-            }}
-            className={`px-6 py-3 rounded-xl font-semibold shadow-lg transition-all w-full md:w-auto ${
-              selectedSize || window.innerWidth < 768
-                ? "bg-black text-white hover:bg-gray-900"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
-          >
-            Add to Cart
-          </button>
+         <div className="hidden md:block">
+  <button
+    onClick={() => {
+      if (window.innerWidth < 768) setShowSizeSheet(true);
+      else addToCart(productData._id, selectedSize);
+    }}
+    className={`px-6 py-3 rounded-xl font-semibold shadow-lg transition-all w-full md:w-auto ${
+      selectedSize || window.innerWidth < 768
+        ? "bg-black text-white hover:bg-gray-900"
+        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+    }`}
+  >
+    Add to Cart
+  </button>
+</div>
+
+{/* ✅ Mobile Fixed Add to Cart Button */}
+<div className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t shadow-lg p-4 z-40">
+  <button
+    onClick={() => setShowSizeSheet(true)}
+    className="w-full bg-black text-white font-semibold py-3 rounded-xl hover:bg-gray-900 transition-all"
+  >
+    Add to Cart
+  </button>
+  
+</div>
         </div>
       </div>
 
