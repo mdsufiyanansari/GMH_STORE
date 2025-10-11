@@ -1,90 +1,56 @@
-import React, { useState } from "react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { FaBoxOpen, FaHeart } from "react-icons/fa";
 
 const Profile = () => {
-  const [formData, setFormData] = useState({
-    name: "Md Sufiyan",
-    email: "example@email.com",
-    phone: "+91 9876543210",
-    address: "Patna, Bihar, India",
-    avatar: "",
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
-  const handleFile = (e) => {
-    setFormData({ ...formData, avatar: URL.createObjectURL(e.target.files[0]) });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Profile Updated:", formData);
-    // TODO: backend ko axios ke through bhejna
-  };
+  const navigate = useNavigate();
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-2xl shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">My Profile</h2>
-
-        {/* Avatar */}
-        <div className="flex justify-center mb-4">
-          <label className="cursor-pointer">
-            <img
-              src={formData.avatar || "https://via.placeholder.com/100"}
-              alt="Avatar"
-              className="w-24 h-24 rounded-full object-cover border-2 border-indigo-500"
-            />
-            <input type="file" onChange={handleFile} className="hidden" />
-          </label>
-        </div>
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Full Name"
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+      <div className="bg-white w-full max-w-sm p-8 rounded-2xl shadow-lg">
+        <div className="flex flex-col items-center">
+          {/* 👤 Profile Avatar */}
+          <img
+            src="https://via.placeholder.com/100"
+            alt="User Avatar"
+            className="w-24 h-24 rounded-full object-cover border-2 border-indigo-500 mb-3"
           />
+          <h2 className="text-xl font-semibold text-gray-800">Md Sufiyan</h2>
+          <p className="text-gray-500 text-sm mb-6">example@email.com</p>
 
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="Email"
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-          />
+          {/* 🧾 Links Section */}
+          <div className="flex flex-col gap-4 w-full">
+            <button
+              onClick={() => navigate("/orders")}
+              className="flex items-center justify-between px-5 py-3 border rounded-xl hover:bg-indigo-50 transition"
+            >
+              <div className="flex items-center gap-3">
+                <FaBoxOpen className="text-indigo-600 text-xl" />
+                <span className="text-gray-700 font-medium">My Orders</span>
+              </div>
+              <span className="text-gray-500 text-sm">›</span>
+            </button>
 
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            placeholder="Phone Number"
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-          />
+            <button
+              onClick={() => navigate("/wishlist")}
+              className="flex items-center justify-between px-5 py-3 border rounded-xl hover:bg-indigo-50 transition"
+            >
+              <div className="flex items-center gap-3">
+                <FaHeart className="text-pink-500 text-xl" />
+                <span className="text-gray-700 font-medium">My Wishlist</span>
+              </div>
+              <span className="text-gray-500 text-sm">›</span>
+            </button>
+          </div>
 
-          <textarea
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            placeholder="Address"
-            className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500"
-          />
-
+          {/* 🔙 Logout or Back */}
           <button
-            type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700"
+            onClick={() => navigate("/")}
+            className="mt-6 text-gray-500 hover:text-indigo-600 text-sm transition"
           >
-            Save Changes
+            ← Back to Home
           </button>
-        </form>
+        </div>
       </div>
     </div>
   );

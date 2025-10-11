@@ -31,7 +31,7 @@ const ProductItem = ({ id, image, name, price }) => {
       {/* Buy Button */}
       <Link to={`/product/${id}`}>
         <button
-          className="px-8 py-3 w-full border border-black font-semibold hover:bg-white bg-black text-white hover:text-black transition ease-in-out duration-500"
+          className="px-8 py-3 w-full border border-black font-semibold hover:bg-white bg-black text-white hover:text-black transition ease-in-out duration-500 z-60"
         >
           Buy
         </button>

@@ -40,7 +40,7 @@ const SearchBar = () => {
         <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 p-5 animate-fadeIn">
           <button
             onClick={() => setShowSearch(false)}
-            className="absolute top-4 right-4 text-2xl text-gray-500 hover:text-black transition"
+            className="absolute bottom-8 right-1 mr-10 text-2xl text-gray-500 hover:text-black transition"
           >
             <IoMdClose />
           </button>
@@ -58,16 +58,21 @@ const SearchBar = () => {
               />
             </div>
 
-            {/* live suggestions */}
+            {/* live suggestions with images */}
             {suggestions.length > 0 && (
               <ul className="bg-white border border-gray-300 rounded-lg mt-1 max-h-60 overflow-y-auto shadow-md">
                 {suggestions.map((item) => (
                   <li
                     key={item._id}
-                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer"
                     onClick={() => handleSearch(item)}
                   >
-                    {item.name}
+                    <img
+                      src={item.image[0]} // assuming image is array
+                      alt={item.name}
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                    <span className="text-gray-700">{item.name}</span>
                   </li>
                 ))}
               </ul>
