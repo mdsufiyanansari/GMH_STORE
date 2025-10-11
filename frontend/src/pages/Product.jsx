@@ -4,6 +4,7 @@ import { ShopContext } from "../context/ShopContext";
 import { FaStar, FaRegStar } from "react-icons/fa";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
+import { motion, AnimatePresence } from "framer-motion";
 import "swiper/css";
 import "swiper/css/pagination";
 import RelatedProducts from "../components/RelatedProducts";
@@ -17,10 +18,8 @@ const Product = () => {
   const [selectedSize, setSelectedSize] = useState("");
   const [rating, setRating] = useState(4);
   const [loading, setLoading] = useState(true);
-
   const [showSizeSheet, setShowSizeSheet] = useState(false);
 
-  // ✅ Swiper ref for mobile thumbnails
   const swiperRef = useRef(null);
 
   useEffect(() => {
@@ -53,7 +52,6 @@ const Product = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* LEFT */}
         <div>
-          {/* Mobile Swiper */}
           <div className="md:hidden">
             <Swiper
               onSwiper={(swiper) => (swiperRef.current = swiper)}
@@ -84,7 +82,6 @@ const Product = () => {
               )}
             </Swiper>
 
-            {/* ✅ Bottom Thumbnails for Mobile */}
             <div className="flex gap-3 mt-4 overflow-x-auto justify-center px-2">
               {productData.image?.length > 0 &&
                 productData.image.map((img, index) => (
@@ -93,8 +90,8 @@ const Product = () => {
                     src={img}
                     alt={`thumb-${index}`}
                     onClick={() => {
-                      setMainImage(img); // optional for border highlight
-                      swiperRef.current?.slideTo(index); // change Swiper slide
+                      setMainImage(img);
+                      swiperRef.current?.slideTo(index);
                     }}
                     className={`w-20 h-20 rounded-lg object-cover cursor-pointer border transition-all ${
                       mainImage === img
@@ -108,7 +105,6 @@ const Product = () => {
 
           {/* Desktop */}
           <div className="hidden md:flex border rounded-2xl p-3 gap-6 bg-white shadow">
-            {/* Thumbnails */}
             <div className="flex md:flex-col md:w-28 w-full gap-3">
               {productData.image?.length > 0 ? (
                 productData.image.map((img, index) => (
@@ -133,7 +129,6 @@ const Product = () => {
               )}
             </div>
 
-            {/* Main Image */}
             <div className="flex-1 flex justify-center items-center">
               <img
                 src={mainImage}
@@ -200,85 +195,98 @@ const Product = () => {
             </div>
           </div>
 
-         <div className="hidden md:block">
-  <button
-    onClick={() => {
-      if (window.innerWidth < 768) setShowSizeSheet(true);
-      else addToCart(productData._id, selectedSize);
-    }}
-    className={`px-6 py-3 rounded-xl font-semibold shadow-lg transition-all w-full md:w-auto ${
-      selectedSize || window.innerWidth < 768
-        ? "bg-black text-white hover:bg-gray-900"
-        : "bg-gray-300 text-gray-500 cursor-not-allowed"
-    }`}
-  >
-    Add to Cart
-  </button>
-</div>
-
-{/* ✅ Mobile Fixed Add to Cart Button */}
-<div className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t shadow-lg p-4 z-40">
-  <button
-    onClick={() => setShowSizeSheet(true)}
-    className="w-full bg-black text-white font-semibold py-3 rounded-xl hover:bg-gray-900 transition-all"
-  >
-    Add to Cart
-  </button>
-  
-</div>
-        </div>
-      </div>
-
-      {/* Bottom Sheet for Mobile */}
-      {showSizeSheet && (
-        <div className="fixed inset-0 bg-black/60 flex items-end z-50 md:hidden">
-          <div className="bg-white w-full rounded-t-2xl p-6 shadow-lg">
-            <h3 className="text-lg font-semibold mb-4">Choose Size</h3>
-            <div className="flex gap-3 flex-wrap">
-              {productData.sizes?.length > 0 ? (
-                productData.sizes.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`px-4 py-2 rounded-lg border font-medium transition-all ${
-                      selectedSize === size
-                        ? "bg-black text-white border-black shadow-md"
-                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                    }`}
-                  >
-                    {size.toUpperCase()}
-                  </button>
-                ))
-              ) : (
-                <p className="text-gray-500">No sizes available</p>
-              )}
-            </div>
-
+          {/* Desktop Add to Cart */}
+          <div className="hidden md:block">
             <button
               onClick={() => {
-                if (selectedSize) {
-                  addToCart(productData._id, selectedSize);
-                  setShowSizeSheet(false);
-                }
+                if (window.innerWidth < 768) setShowSizeSheet(true);
+                else addToCart(productData._id, selectedSize);
               }}
-              className={`mt-6 px-6 py-3 rounded-xl font-semibold shadow-lg w-full ${
-                selectedSize
+              className={`px-6 py-3 rounded-xl font-semibold shadow-lg transition-all w-full md:w-auto ${
+                selectedSize || window.innerWidth < 768
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-gray-300 text-gray-500 cursor-not-allowed"
               }`}
             >
-              Confirm & Add to Cart
+              Add to Cart
             </button>
+          </div>
 
+          {/* Mobile Fixed Add to Cart */}
+          <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t shadow-lg p-4 z-40">
             <button
-              onClick={() => setShowSizeSheet(false)}
-              className="mt-3 text-gray-500 w-full text-center"
+              onClick={() => setShowSizeSheet(true)}
+              className="w-full bg-black text-white font-semibold py-3 rounded-xl hover:bg-gray-900 transition-all"
             >
-              Cancel
+              Add to Cart
             </button>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* Bottom Sheet for Mobile using Framer Motion */}
+      <AnimatePresence>
+        {showSizeSheet && (
+          <motion.div
+            className="fixed inset-0 bg-black/60 flex items-end z-50 md:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="bg-white w-full rounded-t-2xl p-6 shadow-lg"
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              <h3 className="text-lg font-semibold mb-4">Choose Size</h3>
+              <div className="flex gap-3 flex-wrap">
+                {productData.sizes?.length > 0 ? (
+                  productData.sizes.map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
+                      className={`px-4 py-2 rounded-lg border font-medium transition-all ${
+                        selectedSize === size
+                          ? "bg-black text-white border-black shadow-md"
+                          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                      }`}
+                    >
+                      {size.toUpperCase()}
+                    </button>
+                  ))
+                ) : (
+                  <p className="text-gray-500">No sizes available</p>
+                )}
+              </div>
+
+              <button
+                onClick={() => {
+                  if (selectedSize) {
+                    addToCart(productData._id, selectedSize);
+                    setShowSizeSheet(false);
+                  }
+                }}
+                className={`mt-6 px-6 py-3 rounded-xl font-semibold shadow-lg w-full ${
+                  selectedSize
+                    ? "bg-black text-white hover:bg-gray-900"
+                    : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                }`}
+              >
+                Confirm & Add to Cart
+              </button>
+
+              <button
+                onClick={() => setShowSizeSheet(false)}
+                className="mt-3 text-gray-500 w-full text-center"
+              >
+                Cancel
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Related Products */}
       <div className="mt-16">

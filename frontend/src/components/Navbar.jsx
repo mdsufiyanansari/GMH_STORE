@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { assets } from "../assets/assets";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { CiSearch } from "react-icons/ci";
 import { AiOutlineUser } from "react-icons/ai";
 import { FaOpencart } from "react-icons/fa6";
@@ -12,6 +12,9 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { setShowSearch, getCartCount, navigate, token, setToken, setCartItems } =
     useContext(ShopContext);
+
+  const location = useLocation(); // current path
+  const showCart = location.pathname.startsWith("/product"); // product page par cart dikhana
 
   const logout = () => {
     navigate("/login");
@@ -99,21 +102,23 @@ const Navbar = () => {
         </Link>
 
         {/* Right Icons */}
-      <div className="flex items-center gap-4">
-  <CiSearch className="text-3xl cursor-pointer" onClick={() => setShowSearch(true)} />
+        <div className="flex items-center gap-4">
+          <CiSearch className="text-3xl cursor-pointer" onClick={() => setShowSearch(true)} />
 
-  <Link to="/cart" className="relative hidden">
-    <FaOpencart className="text-3xl" />
-    {getCartCount() > 0 && (
-      <span className="absolute -top-1 -right-2 bg-black text-white text-[10px] px-[5px] rounded-full">
-        {getCartCount()}
-      </span>
-    )}
-  </Link>
-</div>
+          {showCart && (
+            <Link to="/cart" className="relative">
+              <FaOpencart className="text-3xl" />
+              {getCartCount() > 0 && (
+                <span className="absolute -top-1 -right-2 bg-black text-white text-[10px] px-[5px] rounded-full">
+                  {getCartCount()}
+                </span>
+              )}
+            </Link>
+          )}
+        </div>
       </div>
 
-      {/* 📱 Mobile Slide Menu (open on burger) */}
+      {/* 📱 Mobile Slide Menu */}
       <div
         className={`sm:hidden fixed top-0 left-0 h-screen w-2/3 bg-white shadow-lg z-40 transform transition-transform duration-300 ${
           menuOpen ? "translate-x-0" : "-translate-x-full"
