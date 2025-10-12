@@ -13,7 +13,6 @@ const Add = () => {
   const [name,setName] = useState("");
   const [description,setDescription] = useState("");
   const [price,setPrice] = useState("");
-  const [offerPrice, setOfferPrice] = useState(""); // ✅ Offer Price state
   const [category,setCategory] = useState("Men");
   const [subCategory,setSubCategory] = useState("Topwear");
   const [bestseller,setBestseller] = useState(false);
@@ -29,7 +28,6 @@ const Add = () => {
       formData.append("name", name);
       formData.append("description", description);
       formData.append("price", price);
-      formData.append("offerPrice", offerPrice); // ✅ Append offerPrice
       formData.append("category", category);
       formData.append("subCategory", subCategory);
       formData.append("bestseller", bestseller);
@@ -48,7 +46,6 @@ const Add = () => {
         setName("");
         setDescription("");
         setPrice("");
-        setOfferPrice(""); // ✅ Reset offerPrice
         setCategory("Men");
         setSubCategory("Topwear");
         setBestseller(false);
@@ -105,7 +102,7 @@ const Add = () => {
         <textarea onChange={(e)=>setDescription(e.target.value)} value={description} className='w-full max-w-4xl px-3 py-2' required />
       </div>
 
-      {/* ---------------- Category / Subcategory / Price / OfferPrice ---------------- */}
+      {/* ---------------- Category / Subcategory / Price ---------------- */}
       <div className="p-4 flex flex-wrap gap-6 bg-white border border-gray-200 rounded-md max-w-4xl mx-auto">
         <div className="flex flex-col flex-1 min-w-[150px]">
           <p className="text-sm font-medium mb-1 text-black">Product Category</p>
@@ -128,16 +125,6 @@ const Add = () => {
         <div className="flex flex-col flex-1 min-w-[150px]">
           <p className="text-sm font-medium mb-1 text-black">Product Price</p>
           <input onChange={(e)=>setPrice(e.target.value)} value={price} type="number" className="border-b border-black px-2 py-1 focus:outline-none" />
-        </div>
-
-        <div className="flex flex-col flex-1 min-w-[150px]">
-          <p className="text-sm font-medium mb-1 text-black">Offer Price</p>
-          <input 
-            type="number" 
-            value={offerPrice} 
-            onChange={(e) => setOfferPrice(e.target.value)} 
-            className="border-b border-black px-2 py-1 focus:outline-none"
-          />
         </div>
       </div>
 
