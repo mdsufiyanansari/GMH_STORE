@@ -55,6 +55,7 @@ const OrdersList = () => {
             <img
               src={order.items?.[0]?.image || assets.parcel_icon} 
               alt={order.items?.[0]?.name || "parcel"}
+              
               className="w-16 h-16 object-contain"
             />
 
