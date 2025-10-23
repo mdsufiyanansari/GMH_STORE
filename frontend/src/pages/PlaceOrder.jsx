@@ -26,9 +26,6 @@ const PlaceOrder = () => {
   });
 
   const [isPinValid, setIsPinValid] = useState(true);
-  const [otpSent, setOtpSent] = useState(false);
-  const [otp, setOtp] = useState("");
-  const [otpVerified, setOtpVerified] = useState(false);
 
   useEffect(() => {
     if (!token) navigate('/login');
@@ -70,48 +67,11 @@ const PlaceOrder = () => {
     }
   };
 
-  const sendOtp = async () => {
-    if (!formData.phone) return toast.error("Please enter phone number!");
-    try {
-      const res = await axios.post(`${backendUrl}/api/send-otp`, { phone: formData.phone });
-      if (res.data.success) {
-        toast.success("OTP sent to your mobile!");
-        setOtpSent(true);
-      } else {
-        toast.error(res.data.message || "Failed to send OTP");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Error sending OTP");
-    }
-  };
-
-  const verifyOtp = async () => {
-    if (!otp) return toast.error("Enter OTP!");
-    try {
-      const res = await axios.post(`${backendUrl}/api/verify-otp`, { phone: formData.phone, otp });
-      if (res.data.success) {
-        toast.success("Phone verified!");
-        setOtpVerified(true);
-      } else {
-        toast.error(res.data.message || "OTP incorrect");
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Error verifying OTP");
-    }
-  };
-
   const onSubmitHandler = async (event) => {
     event.preventDefault();
 
     if (!isPinValid) {
       toast.error("Invalid Pincode! Please enter a correct one.");
-      return;
-    }
-
-    if (!otpVerified) {
-      toast.error("Please verify your phone number first!");
       return;
     }
 
@@ -165,7 +125,6 @@ const PlaceOrder = () => {
           if (responseRazorpay.data.success) {
             const { order } = responseRazorpay.data;
 
-            // ✅ Ensure Razorpay script is loaded
             if (!window.Razorpay) {
               await new Promise((resolve, reject) => {
                 const script = document.createElement("script");
@@ -196,7 +155,7 @@ const PlaceOrder = () => {
               },
             };
 
-            const rzp = new window.Razorpay(options); // ✅ fixed
+            const rzp = new window.Razorpay(options);
             rzp.open();
           }
           break;
@@ -264,37 +223,15 @@ const PlaceOrder = () => {
             className="w-1/2 border border-gray-300 rounded-lg px-4 py-2" />
         </div>
 
-        {/* OTP */}
-        <div className="flex gap-4 mb-4 items-center">
-          <input
-            onChange={onChangeHandler}
-            name="phone"
-            value={formData.phone}
-            required
-            type="tel"
-            placeholder="Phone (+91XXXXXXXXXX)"
-            className="w-1/2 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            disabled={otpVerified}
-          />
-          {!otpSent && !otpVerified && (
-            <button type="button" onClick={sendOtp} className="bg-blue-500 text-white px-4 py-2 rounded">Send OTP</button>
-          )}
-        </div>
-
-        {otpSent && !otpVerified && (
-          <div className="flex gap-4 mb-4 items-center">
-            <input
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              type="number"
-              placeholder="Enter OTP"
-              className="w-1/2 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <button type="button" onClick={verifyOtp} className="bg-green-500 text-white px-4 py-2 rounded">Verify OTP</button>
-          </div>
-        )}
-
-        {otpVerified && <p className="text-green-600 mb-4">Phone verified ✅</p>}
+        <input
+          onChange={onChangeHandler}
+          name="phone"
+          value={formData.phone}
+          required
+          type="tel"
+          placeholder="Phone (+91XXXXXXXXXX)"
+          className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
       </div>
 
       {/* Right Side */}

@@ -28,7 +28,7 @@ export const sendOtp = async (req, res) => {
     await client.messages.create({
       body: `Your OTP is ${otp}`,
       from: process.env.TWILIO_PHONE_NUMBER,
-      to: phone.startsWith("+") ? phone : `+91${phone}`, // हमेशा country code के साथ
+      to: phone.startsWith("+") ? phone : `+91${phone}`, 
     });
 
     res.json({ success: true, message: "OTP sent successfully" });
