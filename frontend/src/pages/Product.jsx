@@ -19,6 +19,7 @@ const Product = () => {
   const [rating, setRating] = useState(4);
   const [loading, setLoading] = useState(true);
   const [showSizeSheet, setShowSizeSheet] = useState(false);
+  const [showMoreDetails, setShowMoreDetails] = useState(false);
 
   const swiperRef = useRef(null);
 
@@ -52,6 +53,7 @@ const Product = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
         {/* LEFT */}
         <div>
+          {/* Mobile Swiper */}
           <div className="md:hidden">
             <Swiper
               onSwiper={(swiper) => (swiperRef.current = swiper)}
@@ -83,50 +85,41 @@ const Product = () => {
             </Swiper>
 
             <div className="flex gap-3 mt-4 overflow-x-auto justify-center px-2">
-              {productData.image?.length > 0 &&
-                productData.image.map((img, index) => (
-                  <img
-                    key={index}
-                    src={img}
-                    alt={`thumb-${index}`}
-                    onClick={() => {
-                      setMainImage(img);
-                      swiperRef.current?.slideTo(index);
-                    }}
-                    className={`w-20 h-20 rounded-lg object-cover cursor-pointer border transition-all ${
-                      mainImage === img
-                        ? "border-black shadow-md scale-105"
-                        : "border-gray-300 hover:border-black"
-                    }`}
-                  />
-                ))}
+              {productData.image?.map((img, index) => (
+                <img
+                  key={index}
+                  src={img}
+                  alt={`thumb-${index}`}
+                  onClick={() => {
+                    setMainImage(img);
+                    swiperRef.current?.slideTo(index);
+                  }}
+                  className={`w-20 h-20 rounded-lg object-cover cursor-pointer border transition-all ${
+                    mainImage === img
+                      ? "border-black shadow-md scale-105"
+                      : "border-gray-300 hover:border-black"
+                  }`}
+                />
+              ))}
             </div>
           </div>
 
-          {/* Desktop */}
+          {/* Desktop Gallery */}
           <div className="hidden md:flex border rounded-2xl p-3 gap-6 bg-white shadow">
             <div className="flex md:flex-col md:w-28 w-full gap-3">
-              {productData.image?.length > 0 ? (
-                productData.image.map((img, index) => (
-                  <img
-                    key={index}
-                    src={img}
-                    alt={`thumb-${index}`}
-                    onClick={() => setMainImage(img)}
-                    className={`w-20 h-20 md:w-24 md:h-24 rounded-lg object-cover cursor-pointer border transition-all ${
-                      mainImage === img
-                        ? "border-black shadow-md scale-105"
-                        : "border-gray-300 hover:border-black"
-                    }`}
-                  />
-                ))
-              ) : (
+              {productData.image?.map((img, index) => (
                 <img
-                  src="/placeholder.png"
-                  alt="placeholder"
-                  className="w-24 h-24 object-cover border-gray-300 rounded-lg"
+                  key={index}
+                  src={img}
+                  alt={`thumb-${index}`}
+                  onClick={() => setMainImage(img)}
+                  className={`w-20 h-20 md:w-24 md:h-24 rounded-lg object-cover cursor-pointer border transition-all ${
+                    mainImage === img
+                      ? "border-black shadow-md scale-105"
+                      : "border-gray-300 hover:border-black"
+                  }`}
                 />
-              )}
+              ))}
             </div>
 
             <div className="flex-1 flex justify-center items-center">
@@ -141,11 +134,11 @@ const Product = () => {
 
         {/* RIGHT */}
         <div className="flex flex-col justify-start space-y-6">
-          <p className="text-gray-600 leading-relaxed">{productData.description}</p>
-          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight">
+          {/* Product Name */}
+          <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight mb-2">
             {productData.name}
           </h1>
-
+          {/* Rating */}
           <div className="flex items-center">
             {Array.from({ length: 5 }, (_, i) =>
               i < rating ? (
@@ -157,53 +150,69 @@ const Product = () => {
             <span className="text-gray-600 ml-2 text-sm">({rating}.0)</span>
           </div>
 
+          {/* Price */}
           <p className="text-3xl font-bold text-gray-900 ">
             {currency}
             {productData.price}
           </p>
 
-          <div className="text-gray-600 space-y-1">
-            <p>
-              <span className="font-semibold">Category:</span> {productData.category}
-            </p>
-            <p>
-              <span className="font-semibold">Type:</span> {productData.subCategory}
-            </p>
-          </div>
+          {/* Product Description with inline Read More */}
+          <p className="text-gray-600 leading-relaxed">
+            {showMoreDetails
+              ? productData.description
+              : productData.description?.slice(0, 120)}
+            {productData.description?.length > 120 && (
+              <button
+                onClick={() => setShowMoreDetails(prev => !prev)}
+                className="text-blue-600 ml-1 font-medium inline"
+              >
+                {showMoreDetails ? " Show Less" : "... Read More"}
+              </button>
+            )}
+          </p>
+
+          {/* Extra Details - Show only on Read More */}
+          {showMoreDetails && (
+            <div className="text-gray-600 space-y-1 mt-2 md:text-lg text-sm">
+              <p ><span className="font-semibold">Brand :- </span> {productData.brand || "Generic Brand"}</p> <hr />
+              <p ><span className="font-semibold">Fabric :- </span> {productData.fabric || "Cotton"}</p> <hr />
+              <p><span className="font-semibold">Ideal For :- </span> {productData.idealFor || "Men/Women"}</p> <hr />
+              <p><span className="font-semibold">Occasion :- </span> {productData.occasion || "Casual"}</p> <hr />
+              <p><span className="font-semibold">Pack Of :- </span> {productData.packOf || "1"}</p> <hr />
+              <p><span className="font-semibold">Package :- </span> {productData.package || "Standard Packaging"}</p> <hr />
+              <p><span className="font-semibold">Care Instruction :- </span> {productData.careInstruction || "Machine Wash"}</p> <hr />
+              <p><span className="font-semibold">Country of Origin :- </span> {productData.countryOrigin || "India"}</p> <hr />
+            </div>
+          )}
+
+          
 
           {/* Sizes (Desktop Only) */}
-          <div className="hidden md:block">
+          <div className="hidden md:block mt-4">
             <span className="font-medium text-gray-700">Available Sizes:</span>
             <div className="flex gap-3 mt-3 flex-wrap">
-              {productData.sizes?.length > 0 ? (
-                productData.sizes.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`px-4 py-2 rounded-lg border font-medium transition-all ${
-                      selectedSize === size
-                        ? "bg-black text-white border-black shadow-md"
-                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                    }`}
-                  >
-                    {size.toUpperCase()}
-                  </button>
-                ))
-              ) : (
-                <p className="text-gray-500">No sizes available</p>
-              )}
+              {productData.sizes?.map((size) => (
+                <button
+                  key={size}
+                  onClick={() => setSelectedSize(size)}
+                  className={`px-4 py-2 rounded-lg border font-medium transition-all ${
+                    selectedSize === size
+                      ? "bg-black text-white border-black shadow-md"
+                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                  }`}
+                >
+                  {size.toUpperCase()}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Desktop Add to Cart */}
-          <div className="hidden md:block">
+          <div className="hidden md:block mt-4">
             <button
-              onClick={() => {
-                if (window.innerWidth < 768) setShowSizeSheet(true);
-                else addToCart(productData._id, selectedSize);
-              }}
+              onClick={() => addToCart(productData._id, selectedSize)}
               className={`px-6 py-3 rounded-xl font-semibold shadow-lg transition-all w-full md:w-auto ${
-                selectedSize || window.innerWidth < 768
+                selectedSize
                   ? "bg-black text-white hover:bg-gray-900"
                   : "bg-gray-300 text-gray-500 cursor-not-allowed"
               }`}
@@ -212,7 +221,7 @@ const Product = () => {
             </button>
           </div>
 
-          {/* Mobile Fixed Add to Cart */}
+          {/* Mobile Add to Cart */}
           <div className="fixed bottom-0 left-0 right-0 md:hidden bg-white border-t shadow-lg p-4 z-40">
             <button
               onClick={() => setShowSizeSheet(true)}
@@ -224,7 +233,7 @@ const Product = () => {
         </div>
       </div>
 
-      {/* Bottom Sheet for Mobile using Framer Motion */}
+      {/* Bottom Sheet for Mobile */}
       <AnimatePresence>
         {showSizeSheet && (
           <motion.div
@@ -242,23 +251,19 @@ const Product = () => {
             >
               <h3 className="text-lg font-semibold mb-4">Choose Size</h3>
               <div className="flex gap-3 flex-wrap">
-                {productData.sizes?.length > 0 ? (
-                  productData.sizes.map((size) => (
-                    <button
-                      key={size}
-                      onClick={() => setSelectedSize(size)}
-                      className={`px-4 py-2 rounded-lg border font-medium transition-all ${
-                        selectedSize === size
-                          ? "bg-black text-white border-black shadow-md"
-                          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-                      }`}
-                    >
-                      {size.toUpperCase()}
-                    </button>
-                  ))
-                ) : (
-                  <p className="text-gray-500">No sizes available</p>
-                )}
+                {productData.sizes?.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-4 py-2 rounded-lg border font-medium transition-all ${
+                      selectedSize === size
+                        ? "bg-black text-white border-black shadow-md"
+                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+                    }`}
+                  >
+                    {size.toUpperCase()}
+                  </button>
+                ))}
               </div>
 
               <button
