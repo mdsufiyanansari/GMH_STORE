@@ -1,5 +1,6 @@
 import React from "react";
 import { assets } from "../assets/assets";
+import { Link, NavLink, useLocation } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -19,18 +20,22 @@ const Footer = () => {
         <div>
           <p className="font-semibold text-lg mb-4">COMPANY</p>
           <ul className="space-y-2 text-gray-300 text-sm">
-            <li className="hover:text-white cursor-pointer transition-colors">
+            <Link to="/" > <li className="hover:text-white cursor-pointer transition-colors">
               Home
-            </li>
-            <li className="hover:text-white cursor-pointer transition-colors">
+            </li></Link>
+           
+            <Link to="/about"><li className="hover:text-white cursor-pointer transition-colors">
               About
-            </li>
-            <li className="hover:text-white cursor-pointer transition-colors">
+            </li></Link>
+            
+            <Link to="/delivery">            <li className="hover:text-white cursor-pointer transition-colors">
               Delivery
-            </li>
-            <li className="hover:text-white cursor-pointer transition-colors">
+            </li></Link>
+
+            <Link to="/policy"> <li className="hover:text-white cursor-pointer transition-colors">
               Privacy Policy
-            </li>
+            </li></Link>
+           
           </ul>
         </div>
 

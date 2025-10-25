@@ -4,7 +4,7 @@ import { FaExchangeAlt, FaUndo, FaHeadset } from "react-icons/fa";
 
 const OurPolicy = () => {
   return (
-    <div className="my-16 px-6 md:px-12 lg:px-20">
+    <div className="my-16 px-6 md:px-12 lg:px-20 center flex-col">
       {/* Section Heading */}
       <div className="text-center text-3xl py-8">
         <Title text1={"OUR"} text2={"POLICY"} />
